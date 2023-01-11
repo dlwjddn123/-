@@ -1,6 +1,5 @@
 package com.footstep.domain.posting.domain.posting;
 
-import com.footstep.domain.posting.domain.Image;
 import com.footstep.domain.base.BaseTimeEntity;
 import com.footstep.domain.base.Status;
 import com.footstep.domain.posting.domain.Comment;
@@ -36,9 +35,6 @@ public class Posting extends BaseTimeEntity {
     private Status status;
 
     @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -53,14 +49,13 @@ public class Posting extends BaseTimeEntity {
     private Place place;
 
     @Builder
-    public Posting(String title, String content, LocalDateTime recordDate, int visibilityStatusCode, List<Image> images, Users users, Place place) {
+    public Posting(String title, String content, LocalDateTime recordDate, int visibilityStatusCode, Users users, Place place) {
         this.title = title;
         this.content = content;
         this.modifiedDate = getExpiredDate();
         this.recordDate = recordDate;
         this.visibilityStatus = VisibilityStatus.get(visibilityStatusCode);
         this.status = Status.NORMAL;
-        this.images = images;
         this.users = users;
         this.place = place;
     }
