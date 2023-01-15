@@ -1,4 +1,4 @@
-package com.footstep.domain.users.dto;
+package com.footstep.domain.users.dto.changeProfileInfo;
 
 import lombok.*;
 

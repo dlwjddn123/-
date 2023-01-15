@@ -1,17 +1,14 @@
 package com.footstep.domain.users.controller;
 
-import com.footstep.domain.users.domain.Users;
-import com.footstep.domain.users.dto.ChangePasswordInfo;
+import com.footstep.domain.users.dto.changeProfileInfo.ChangeNicknameInfo;
+import com.footstep.domain.users.dto.changeProfileInfo.ChangePasswordInfo;
 import com.footstep.domain.users.dto.MyPageInfo;
 import com.footstep.domain.users.dto.TokenDto;
-import com.footstep.domain.users.repository.UsersRepository;
+import com.footstep.domain.users.dto.changeProfileInfo.ChangeProfileImageInfo;
 import com.footstep.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 
 @RestController
@@ -19,7 +16,6 @@ import java.util.Map;
 public class UsersController {
 
     private final UsersService usersService;
-    private final UsersRepository usersRepository;
 
     @GetMapping("/my-page")
     public MyPageInfo getMyPage(Authentication authentication) {
@@ -33,13 +29,13 @@ public class UsersController {
 
 
     @PatchMapping("/my-page/nickname")
-    public void changeNickname (Authentication authentication, @RequestBody Map<String, String> nicknameMap) {
-        usersService.changeNickname(authentication, nicknameMap.get("nickname"));
+    public void changeNickname(Authentication authentication, @RequestBody ChangeNicknameInfo changeNicknameInfo) {
+        usersService.changeNickname(authentication, changeNicknameInfo.getNickname());
     }
 
     @PatchMapping("/my-page/profile")
-    public void changeProfileImage(Authentication authentication, @RequestBody Map<String, String> imageUrlMap) {
-        usersService.changeProfileImage(authentication, imageUrlMap.get("imageUrl"));
+    public void changeProfileImage(Authentication authentication, @RequestBody ChangeProfileImageInfo changeProfileImageInfo) {
+        usersService.changeProfileImage(authentication, changeProfileImageInfo.getProfileImageUrl());
     }
 
     @PatchMapping("/my-page/secession")

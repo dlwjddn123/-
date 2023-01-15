@@ -1,7 +1,7 @@
 package com.footstep.domain.users.service;
 
 import com.footstep.domain.users.domain.Users;
-import com.footstep.domain.users.dto.ChangePasswordInfo;
+import com.footstep.domain.users.dto.changeProfileInfo.ChangePasswordInfo;
 import com.footstep.domain.users.dto.MyPageInfo;
 import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.repository.UsersRepository;
