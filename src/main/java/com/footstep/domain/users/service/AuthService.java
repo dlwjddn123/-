@@ -1,5 +1,6 @@
 package com.footstep.domain.users.service;
 
+import com.footstep.domain.base.Status;
 import com.footstep.domain.users.domain.Users;
 import com.footstep.domain.users.domain.auth.LogoutAccessToken;
 import com.footstep.domain.users.domain.auth.RefreshToken;
@@ -38,13 +39,16 @@ public class AuthService {
 
     public void join(JoinDto joinDto) {
         joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
-        Users users = usersRepository.save(Users.ofUser(joinDto));
+        usersRepository.save(Users.ofUser(joinDto));
     }
 
     public TokenDto login(LoginDto loginDto) {
         Users users = usersRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new NoSuchElementException("회원이 없습니다."));
+        if (users.getStatus().equals(Status.EXPIRED)) {
+            throw new IllegalArgumentException("탈퇴한 회원입니다.");
+        }
         checkPassword(loginDto.getPassword(), users.getPassword());
-        String username = users.getNickname();
+        String username = users.getEmail();
         String accessToken = jwtTokenUtil.generateAccessToken(username);
         RefreshToken refreshToken = saveRefreshToken(username);
         return TokenDto.of(accessToken, refreshToken.getRefreshToken());
