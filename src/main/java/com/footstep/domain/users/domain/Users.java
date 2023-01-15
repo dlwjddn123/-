@@ -53,6 +53,7 @@ public class Users extends BaseTimeEntity {
                 .email(joinDto.getEmail())
                 .password(joinDto.getPassword())
                 .nickname(joinDto.getNickname())
+                .status(Status.NORMAL)
                 .build();
         member.addAuthority(Authority.ofUser(member));
         return member;
@@ -66,5 +67,21 @@ public class Users extends BaseTimeEntity {
 
     private void addAuthority(Authority authority) {
         authorities.add(authority);
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeProfileImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
+
+    public void secession() {
+        this.status = Status.EXPIRED;
     }
 }

@@ -28,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
 
     public static UserDetails of(Users users) {
         return CustomUserDetails.builder()
-                .username(users.getNickname())
+                .username(users.getEmail())
                 .password(users.getPassword())
                 .roles(users.getRoles())
                 .build();
