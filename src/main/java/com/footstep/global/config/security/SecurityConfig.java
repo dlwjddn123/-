@@ -40,8 +40,8 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/join", "/login").permitAll()
-                .anyRequest().hasRole("USER")
+//                .antMatchers("/", "/join", "/login", "/swagger-ui/**").permitAll()
+                .anyRequest().permitAll()
 
                 .and()
                 .exceptionHandling()
@@ -55,4 +55,5 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
  }
