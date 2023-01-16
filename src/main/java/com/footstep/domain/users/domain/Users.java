@@ -40,12 +40,15 @@ public class Users extends BaseTimeEntity {
     private Status status;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Posting> postings = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Likes> likes = new ArrayList<>();
 
     public static Users ofUser(JoinDto joinDto) {
