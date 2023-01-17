@@ -10,5 +10,5 @@ import java.util.List;
 public interface PostingRepository extends JpaRepository<Posting, Long> {
 
     List<Posting> findByUsersAndPlaceOrderByCreatedDateDesc(Users users, Place place);
-    List<Place> findDistinctByUsers(Users users);
+    List<Posting> findByUsers(Users users);
 }

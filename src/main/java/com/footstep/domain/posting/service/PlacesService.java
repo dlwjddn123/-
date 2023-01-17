@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -44,14 +46,11 @@ public class PlacesService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Users currentUsers = usersRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
-        List<Place> places = postingRepository.findDistinctByUsers(currentUsers);
-        return new AllPlaceDto(places);
-        /*
-        List<AllPlaceDto> allPlaceDto = new ArrayList<>();
-        for (Place place : places) {
-            allPlaceDto.add(new AllPlaceDto(place.getId()));
+        List<Posting> postings = postingRepository.findByUsers(currentUsers);
+        List<Long> placeIds = new ArrayList<>();
+        for (Posting posting : postings) {
+            placeIds.add(posting.getPlace().getId());
         }
-        return allPlaceDto;
-         */
+        return new AllPlaceDto(new HashSet<>(placeIds).stream().toList());
     }
 }

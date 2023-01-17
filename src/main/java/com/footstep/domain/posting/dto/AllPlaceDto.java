@@ -1,6 +1,5 @@
 package com.footstep.domain.posting.dto;
 
-import com.footstep.domain.posting.domain.place.Place;
 import lombok.*;
 
 import java.util.List;
@@ -12,5 +11,5 @@ import java.util.List;
 @Builder
 public class AllPlaceDto {
 
-    List<Place> place;
+    List<Long> placeId;
 }
