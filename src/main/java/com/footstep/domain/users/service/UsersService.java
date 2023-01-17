@@ -5,6 +5,7 @@ import com.footstep.domain.users.dto.changeProfileInfo.ChangePasswordInfo;
 import com.footstep.domain.users.dto.MyPageInfo;
 import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.repository.UsersRepository;
+import com.footstep.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +22,8 @@ public class UsersService {
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
     
-    public MyPageInfo getMyPage(Authentication authentication) {
-        UserDetails details = (UserDetails) authentication.getPrincipal();
-        Users currentUsers = usersRepository.findByEmail(details.getUsername()).orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
+    public MyPageInfo getMyPage() {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
         return new MyPageInfo(currentUsers.getNickname(), currentUsers.getPostings().size());
     }
 
