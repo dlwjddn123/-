@@ -28,15 +28,13 @@ public class Posting extends BaseTimeEntity {
     private Long id;
     private String title;
     private String content;
+    private String imageUrl;
     private LocalDateTime modifiedDate;
     private LocalDateTime recordDate;
     @Enumerated(EnumType.STRING)
     private VisibilityStatus visibilityStatus;
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -53,14 +51,14 @@ public class Posting extends BaseTimeEntity {
     private Place place;
 
     @Builder
-    public Posting(String title, String content, LocalDateTime recordDate, int visibilityStatusCode, List<Image> images, Users users, Place place) {
+    public Posting(String title, String content, String imageUrl, LocalDateTime recordDate, int visibilityStatusCode, Users users, Place place) {
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.modifiedDate = getExpiredDate();
         this.recordDate = recordDate;
         this.visibilityStatus = VisibilityStatus.get(visibilityStatusCode);
         this.status = Status.NORMAL;
-        this.images = images;
         this.users = users;
         this.place = place;
     }
