@@ -10,10 +10,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,7 +30,8 @@ public class Posting extends BaseTimeEntity {
     private String title;
     private String content;
     private LocalDateTime modifiedDate;
-    private LocalDateTime recordDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date recordDate;
     @Enumerated(EnumType.STRING)
     private VisibilityStatus visibilityStatus;
     @Enumerated(EnumType.STRING)
@@ -49,7 +52,7 @@ public class Posting extends BaseTimeEntity {
     private Place place;
 
     @Builder
-    public Posting(String title, String content, LocalDateTime recordDate, int visibilityStatusCode, Users users, Place place) {
+    public Posting(String title, String content, Date recordDate, int visibilityStatusCode, Users users, Place place) {
         this.title = title;
         this.content = content;
         this.modifiedDate = getExpiredDate();
