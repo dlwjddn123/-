@@ -2,6 +2,7 @@ package com.footstep.domain.posting.controller;
 
 import com.footstep.domain.posting.dto.AllPlaceDto;
 import com.footstep.domain.posting.dto.SpecificPlaceDto;
+import com.footstep.domain.posting.dto.SpecificPlaceListDto;
 import com.footstep.domain.posting.service.PlacesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,6 @@ import com.footstep.domain.posting.dto.CreatePostingDto;
 import com.footstep.domain.posting.service.PostingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -24,6 +24,11 @@ public class PostingController {
     @GetMapping("/{place_id}")
     public SpecificPlaceDto viewSpecificPlace(@PathVariable("place_id") Long place_id) {
         return placesService.viewSpecificPlace(place_id);
+    }
+
+    @GetMapping("/{place_id}/list")
+    public List<SpecificPlaceListDto> viewSpecificPlaceList(@PathVariable("place_id") Long place_id) {
+        return placesService.viewSpecificPlaceList(place_id);
     }
 
     @GetMapping("/all")
