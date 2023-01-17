@@ -1,6 +1,5 @@
 package com.footstep.domain.posting.domain.posting;
 
-import com.footstep.domain.posting.domain.Image;
 import com.footstep.domain.base.BaseTimeEntity;
 import com.footstep.domain.base.Status;
 import com.footstep.domain.posting.domain.Comment;
