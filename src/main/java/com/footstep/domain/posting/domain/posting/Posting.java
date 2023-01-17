@@ -1,6 +1,5 @@
 package com.footstep.domain.posting.domain.posting;
 
-import com.footstep.domain.posting.domain.Image;
 import com.footstep.domain.base.BaseTimeEntity;
 import com.footstep.domain.base.Status;
 import com.footstep.domain.posting.domain.Comment;
@@ -11,10 +10,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,14 +30,12 @@ public class Posting extends BaseTimeEntity {
     private String title;
     private String content;
     private LocalDateTime modifiedDate;
-    private LocalDateTime recordDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date recordDate;
     @Enumerated(EnumType.STRING)
     private VisibilityStatus visibilityStatus;
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -53,14 +52,13 @@ public class Posting extends BaseTimeEntity {
     private Place place;
 
     @Builder
-    public Posting(String title, String content, LocalDateTime recordDate, int visibilityStatusCode, List<Image> images, Users users, Place place) {
+    public Posting(String title, String content, Date recordDate, int visibilityStatusCode, Users users, Place place) {
         this.title = title;
         this.content = content;
         this.modifiedDate = getExpiredDate();
         this.recordDate = recordDate;
         this.visibilityStatus = VisibilityStatus.get(visibilityStatusCode);
         this.status = Status.NORMAL;
-        this.images = images;
         this.users = users;
         this.place = place;
     }
