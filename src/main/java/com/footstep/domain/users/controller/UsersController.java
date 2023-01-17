@@ -18,8 +18,8 @@ public class UsersController {
     private final UsersService usersService;
 
     @GetMapping("/my-page")
-    public MyPageInfo getMyPage(Authentication authentication) {
-        return usersService.getMyPage(authentication);
+    public MyPageInfo getMyPage() {
+        return usersService.getMyPage();
     }
 
     @PatchMapping("/my-page/password")
