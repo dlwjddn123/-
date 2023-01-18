@@ -24,7 +24,7 @@ public class PostingController {
     }
 
     @GetMapping("/{place_id}/list")
-    public SpecificPlaceListResponseDto viewSpecificPlaceList(@PathVariable("place_id") Long place_id) {
+    public PostingListResponseDto viewSpecificPlaceList(@PathVariable("place_id") Long place_id) {
         return placeService.viewSpecificPlaceList(place_id);
     }
 
@@ -37,5 +37,11 @@ public class PostingController {
     public ResponseEntity uploadPosting(@RequestBody CreatePostingDto createPostingDto) {
         postingService.uploadPosting(createPostingDto);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/gallery")
+    public ResponseEntity<PostingListResponseDto> viewGallery() {
+        PostingListResponseDto result = postingService.viewGallery();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

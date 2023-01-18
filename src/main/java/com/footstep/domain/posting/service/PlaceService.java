@@ -15,6 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import java.util.*;
 
 @Service
@@ -26,7 +30,7 @@ public class PlaceService {
     private final PostingRepository postingRepository;
     private final UsersRepository usersRepository;
 
-    public void createPlace(CreatePlaceDto createPlaceDto) {
+    public Place createPlace(CreatePlaceDto createPlaceDto) {
         Place place = Place.builder()
                 .name(createPlaceDto.getName())
                 .address(createPlaceDto.getAddress())
@@ -37,6 +41,7 @@ public class PlaceService {
                 .build();
 
         placeRepository.save(place);
+        return place;
     }
 
     public SpecificPlaceDto viewSpecificPlace(Long placeId) {
@@ -54,7 +59,7 @@ public class PlaceService {
                 .build();
     }
 
-    public SpecificPlaceListResponseDto viewSpecificPlaceList(Long placeId) {
+    public PostingListResponseDto viewSpecificPlaceList(Long placeId) {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new IllegalStateException("로그인을 해주세요"));
         Place place = placeRepository.findById(placeId)
@@ -64,9 +69,9 @@ public class PlaceService {
             throw new NullPointerException("해당 장소에 작성된 게시글이 없습니다.");
         List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
 
-        List<SpecificPlaceListDto> specificPlaceListDto = new ArrayList<>();
+        List<PostingListDto> postingListDto = new ArrayList<>();
         for (Posting posting : postings) {
-            SpecificPlaceListDto dto = SpecificPlaceListDto.builder()
+            PostingListDto dto = PostingListDto.builder()
                     .placeName(place.getName())
                     .recordDate(posting.getRecordDate())
                     .imageUrl(posting.getImageUrl())
@@ -75,9 +80,9 @@ public class PlaceService {
                     .postings((long) Collections.frequency(dates, posting.getRecordDate()))
                     .postingId(posting.getId())
                     .build();
-            specificPlaceListDto.add(dto);
+            postingListDto.add(dto);
         }
-        return new SpecificPlaceListResponseDto(specificPlaceListDto, (long) new HashSet<>(dates).stream().toList().size());
+        return new PostingListResponseDto(postingListDto, (long) new HashSet<>(dates).stream().toList().size());
     }
 
     public AllPlaceDto viewAllPlace() {

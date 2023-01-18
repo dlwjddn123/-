@@ -1,3 +1,4 @@
+
 package com.footstep.domain.posting.dto;
 
 import lombok.*;
@@ -9,8 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SpecificPlaceListResponseDto {
+public class PostingListResponseDto {
 
-    List<SpecificPlaceListDto> specificPlaceListDto;
+    List<PostingListDto> postingListDto;
     Long uploadDates;
 }

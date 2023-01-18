@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SpecificPlaceListDto {
+public class PostingListDto {
 
     private String placeName;
     @JsonFormat(pattern = "yyyy-MM-dd")
