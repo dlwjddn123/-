@@ -14,6 +14,6 @@ public class CreatePostingDto {
     private String content;
     private Date recordDate;
     private String imageUrl;
-    private String placeName;
+    private CreatePlaceDto createPlaceDto;
     private int visibilityStatusCode;
 }
