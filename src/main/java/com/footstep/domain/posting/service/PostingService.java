@@ -17,18 +17,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PostingService {
     
-    private final PlaceRepository placeRepository;
+    private final PlaceService placeService;
     private final UsersRepository usersRepository;
     private final PostingRepository postingRepository;
     
     public void uploadPosting(CreatePostingDto createPostingDto) {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new IllegalStateException("로그인을 해주세요"));
-        Place findPlace = placeRepository.findByName(createPostingDto.getPlaceName()).orElseThrow(() -> new NullPointerException("등록되지 않은 장소입니다."));
+        Place createPlace = placeService.createPlace(createPostingDto.getCreatePlaceDto());
         Posting posting = Posting.builder()
                 .title(createPostingDto.getTitle())
                 .content(createPostingDto.getContent())
                 .recordDate(createPostingDto.getRecordDate())
-                .place(findPlace)
+                .place(createPlace)
                 .users(currentUsers)
                 .visibilityStatusCode(createPostingDto.getVisibilityStatusCode())
                 .build();

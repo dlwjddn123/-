@@ -17,7 +17,7 @@ public class PlaceService {
 
     private final PlaceRepository placeRepository;
 
-    public void createPlace(CreatePlaceDto createPlaceDto) {
+    public Place createPlace(CreatePlaceDto createPlaceDto) {
         Place place = Place.builder()
                 .name(createPlaceDto.getName())
                 .address(createPlaceDto.getAddress())
@@ -28,5 +28,6 @@ public class PlaceService {
                 .build();
 
         placeRepository.save(place);
+        return place;
     }
 }
