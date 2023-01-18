@@ -2,6 +2,7 @@ package com.footstep.domain.posting.controller;
 
 import com.footstep.domain.posting.dto.*;
 import com.footstep.domain.posting.service.PlaceService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.footstep.domain.posting.service.PostingService;
@@ -43,5 +44,13 @@ public class PostingController {
     public ResponseEntity<PostingListResponseDto> viewGallery() {
         PostingListResponseDto result = postingService.viewGallery();
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @ResponseBody
+    @GetMapping("/posting/{posting-id}")
+    @ApiOperation(value = "발자취 게시물 상세조회", notes = "posting-id 넘어오면 해당 게시물 조회")
+    public ResponseEntity<SpecificPosting> specificPosting(@PathVariable("posting-id") Long posting_id) {
+        SpecificPosting result = postingService.viewSpecificPosting(posting_id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
     }
 }
