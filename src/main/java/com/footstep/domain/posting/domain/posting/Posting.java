@@ -29,6 +29,7 @@ public class Posting extends BaseTimeEntity {
     private Long id;
     private String title;
     private String content;
+    private String imageUrl;
     private LocalDateTime modifiedDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date recordDate;
@@ -52,9 +53,10 @@ public class Posting extends BaseTimeEntity {
     private Place place;
 
     @Builder
-    public Posting(String title, String content, Date recordDate, int visibilityStatusCode, Users users, Place place) {
+    public Posting(String title, String content, String imageUrl, Date recordDate, int visibilityStatusCode, Users users, Place place) {
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.modifiedDate = getExpiredDate();
         this.recordDate = recordDate;
         this.visibilityStatus = VisibilityStatus.get(visibilityStatusCode);

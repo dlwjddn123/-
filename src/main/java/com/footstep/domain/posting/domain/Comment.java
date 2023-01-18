@@ -39,4 +39,8 @@ public class Comment extends BaseTimeEntity {
         this.users = users;
         this.posting = posting;
     }
+
+    public void changeStatus() {
+        this.status = Status.EXPIRED;
+    }
 }
