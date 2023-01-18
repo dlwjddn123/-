@@ -43,7 +43,7 @@ public class PostingService {
     public PostingListResponseDto viewGallery() {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new IllegalStateException("로그인을 해주세요"));
-        List<Posting> postings = postingRepository.findAllByOrderByCreatedDateDesc();
+        List<Posting> postings = postingRepository.findAllByUsersOrderByCreatedDateDesc(users);
         List<PostingListDto> postingListDto = new ArrayList<>();
         List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
 
