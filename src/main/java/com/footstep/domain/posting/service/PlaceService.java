@@ -47,9 +47,8 @@ public class PlaceService {
     }
 
     public Optional<Place> getPlace(CreatePlaceDto createPlaceDto) {
-        Optional<Place> place = placeRepository
+        return placeRepository
                 .findByLatitudeAndLongitude(createPlaceDto.getLatitude(), createPlaceDto.getLongitude());
-        return place;
     }
 
     public SpecificPlaceDto viewSpecificPlace(Long placeId) throws BaseException {
