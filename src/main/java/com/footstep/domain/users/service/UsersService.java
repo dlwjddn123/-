@@ -1,6 +1,9 @@
 package com.footstep.domain.users.service;
 
+import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.users.domain.Users;
+import com.footstep.domain.users.dto.JoinDto;
 import com.footstep.domain.users.dto.changeProfileInfo.ChangePasswordInfo;
 import com.footstep.domain.users.dto.MyPageInfo;
 import com.footstep.domain.users.dto.TokenDto;
@@ -13,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.footstep.domain.base.BaseResponseStatus.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -21,39 +26,43 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
-    
-    public MyPageInfo getMyPage() {
-        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
+
+    public void join(JoinDto joinDto) throws BaseException {
+        joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
+        if (!usersRepository.findByEmail(joinDto.getEmail()).isEmpty()) {
+            throw new BaseException(DUPLICATED_EMAIL);
+        }
+        usersRepository.save(Users.ofUser(joinDto));
+    }
+
+    public MyPageInfo getMyPage() throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         return new MyPageInfo(currentUsers.getNickname(), currentUsers.getPostings().size());
     }
 
-    public void changePassword(Authentication authentication, ChangePasswordInfo changePasswordInfo) {
-        UserDetails details = (UserDetails) authentication.getPrincipal();
-        Users users = usersRepository.findByEmail(details.getUsername()).orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
+    public void changePassword(ChangePasswordInfo changePasswordInfo) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         if (!passwordEncoder.matches(changePasswordInfo.getCurrentPassword(), users.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new BaseException(INVALID_PASSWORD);
         }
         users.changePassword(passwordEncoder.encode(changePasswordInfo.getChangedPassword()));
         usersRepository.save(users);
     }
 
-    public void changeNickname(Authentication authentication, String nickname) {
-        UserDetails details = (UserDetails) authentication.getPrincipal();
-        Users users = usersRepository.findByEmail(details.getUsername()).orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
+    public void changeNickname(String nickname) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         users.changeNickname(nickname);
         usersRepository.save(users);
     }
 
-    public void changeProfileImage(Authentication authentication, String imageUrl) {
-        UserDetails details = (UserDetails) authentication.getPrincipal();
-        Users users = usersRepository.findByEmail(details.getUsername()).orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
+    public void changeProfileImage(String imageUrl) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         users.changeProfileImage(imageUrl);
         usersRepository.save(users);
     }
 
-    public void secession(Authentication authentication, TokenDto tokenDto) {
-        UserDetails details = (UserDetails) authentication.getPrincipal();
-        Users users = usersRepository.findByEmail(details.getUsername()).orElseThrow(() -> new NullPointerException("로그인이 필요합니다."));
+    public void secession(TokenDto tokenDto) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         users.secession();
         authService.logout(tokenDto, users.getEmail());
         usersRepository.save(users);
