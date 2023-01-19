@@ -84,7 +84,7 @@ public class PostingService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Posting posting = postingRepository.findById(postingId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_POSTING));
-        Place place = placeRepository.findById(posting.getId())
+        Place place = placeRepository.findById(posting.getPlace().getId())
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
         Integer likeCount = likeRepository.countByPosting(posting).orElse(0);
         List<Comment> comment = commentRepository.findByPosting(posting);
