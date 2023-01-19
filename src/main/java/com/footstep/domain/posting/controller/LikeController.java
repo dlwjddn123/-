@@ -5,13 +5,11 @@ import com.footstep.domain.base.BaseResponse;
 import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.service.LikeService;
 import com.footstep.domain.users.repository.UsersRepository;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Api(tags = {"좋아요 API"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/footstep/{posting_id}")
