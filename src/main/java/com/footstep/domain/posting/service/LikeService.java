@@ -10,11 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -37,14 +32,10 @@ public class LikeService {
         likeRepository.delete(likes);
     }
 
-    public List<String> count(Long postingId, Users users) {
+    public String count(Long postingId, Users users) {
         Posting posting = postingRepository.findById(postingId).orElseThrow();
         Integer likeCount = likeRepository.countByPosting(posting).orElse(0);
-        List<String> result = new ArrayList<>(Arrays.asList(String.valueOf(likeCount)));
-        if(Objects.nonNull(users)){
-            result.add(String.valueOf(isNotLiked(users, posting)));
-            return result;
-        }
+        String result = String.valueOf(likeCount);
         return result;
     }
 
