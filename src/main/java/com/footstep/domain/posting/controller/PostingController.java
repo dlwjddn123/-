@@ -34,9 +34,6 @@ public class PostingController {
             value = "발자취 생성",
             notes = "발자취(게시물) 생성",
             response = ResponseEntity.class)
-    @ApiImplicitParams(
-            @ApiImplicitParam(name = "AccessToken", value = "asdasdsad", required = true, dataTypeClass = String.class)
-    )
     @PostMapping("/write")
     public BaseResponse<BaseResponseStatus> uploadPosting(@RequestBody CreatePostingDto createPostingDto) {
         try {
