@@ -6,11 +6,12 @@ import com.footstep.domain.users.dto.LoginDto;
 import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.service.AuthService;
 import com.footstep.global.config.jwt.JwtTokenUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-
+@Api(tags = {"회원 인증 API"})
 @RestController
 @RequiredArgsConstructor
 public class AuthController {

@@ -9,6 +9,7 @@ import com.footstep.domain.users.dto.MyPageInfo;
 import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.dto.changeProfileInfo.ChangeProfileImageInfo;
 import com.footstep.domain.users.service.UsersService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-
+@Api(tags = {"회원 정보 API"})
 @RestController
 @RequiredArgsConstructor
 public class UsersController {
