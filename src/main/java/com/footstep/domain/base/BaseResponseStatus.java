@@ -52,6 +52,9 @@ public enum BaseResponseStatus {
     // Posting
     NOT_FOUND_POSTING(false, 3031, "게시글이 존재하지 않습니다."),
 
+    // Comment
+    NOT_FOUND_COMMENT(false, 3041, "댓글이 존재하지 않습니다."),
+
     /**
      * 4000 : Database, Server 오류
      */

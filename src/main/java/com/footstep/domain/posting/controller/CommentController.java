@@ -1,58 +1,82 @@
 package com.footstep.domain.posting.controller;
 
+import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.BaseResponse;
+import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.dto.CreateCommentDto;
 import com.footstep.domain.posting.service.CommentService;
-import com.footstep.domain.users.domain.Users;
-import com.footstep.domain.users.repository.UsersRepository;
-import com.footstep.global.config.security.util.SecurityUtils;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/footstep/{posting_id}")
+@Api(tags = {"댓글 API"})
 public class CommentController {
 
     private final CommentService commentService;
-    private final UsersRepository usersRepository;
+
+
+    @ApiResponses({
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
+    })
 
     @PostMapping("/comment")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true),
+            @ApiImplicitParam(name = "createCommentDto", value = "댓글 내용", required = true)
+    })
+    @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
     @ApiOperation(value = "댓글 생성", notes = "해당 게시글에 댓글 달기")
-    public ResponseEntity<String> addComment( @PathVariable Long posting_id, @RequestBody CreateCommentDto createCommentDto) {
-        Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
-                -> new IllegalStateException("로그인을 해주세요"));
-        boolean result = false;
-        if (Objects.nonNull(currentUser)) {
-            result = commentService.addComment(createCommentDto.getContent(), currentUser, posting_id);
-        }
-        if (result == true) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public BaseResponse<BaseResponseStatus> addComment(@PathVariable Long posting_id, @RequestBody CreateCommentDto createCommentDto) {
+        try {
+            commentService.addComment(createCommentDto.getContent(), posting_id);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
     @PatchMapping("/{comment_id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true),
+            @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다."),
+            @ApiResponse(code = 3041, message = "해당 댓글이 존재하지 않습니다")
+    })
     @ApiOperation(value = "댓글 삭제", notes = "해당 댓글 삭제")
-    public ResponseEntity<String> deleteComment(@PathVariable Long comment_id) {
-        Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
-                -> new IllegalStateException("로그인을 해주세요"));
-        commentService.deleteComment(comment_id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public BaseResponse<BaseResponseStatus> deleteComment(@PathVariable Long posting_id, @PathVariable Long comment_id) {
+        try {
+            commentService.deleteComment(comment_id, posting_id);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+
+        }
     }
 
 
     @GetMapping("/comments/count")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "posting_id", value = "해당 게시물 아이디", required = true),
+    })
+    @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     @ApiOperation(value = "댓글 개수", notes = "해당 게시물에 댓글 개수 세기")
-    public ResponseEntity<String> countComment(@PathVariable Long posting_id) {
-        Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
-                -> new IllegalStateException("로그인을 해주세요"));
-        String result = commentService.count(posting_id, currentUser);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public BaseResponse<String> countComment(@PathVariable Long posting_id) {
+        try {
+            String result = commentService.count(posting_id);
+            return new BaseResponse<>(result);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+
+        }
     }
 }
