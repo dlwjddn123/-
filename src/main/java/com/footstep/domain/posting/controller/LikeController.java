@@ -53,10 +53,10 @@ public class LikeController {
 
     @GetMapping("/like")
     @ApiOperation(value = "좋아요 개수", notes = "해당 게시물에 좋아요 개수 세기")
-    public ResponseEntity<List<String>> likeCount(@PathVariable Long postingId) {
+    public ResponseEntity<String> countLike(@PathVariable Long postingId) {
         Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
                 -> new IllegalStateException("로그인을 해주세요"));
-        List<String> result = likeService.count(postingId, currentUser);
+        String result = likeService.count(postingId, currentUser);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
