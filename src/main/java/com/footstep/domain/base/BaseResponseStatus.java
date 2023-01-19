@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 public enum BaseResponseStatus {
     /**
-     * 1000 : 요청 성공
+     * 200 : 요청 성공
      */
-    SUCCESS(true, 1000, "요청에 성공하였습니다."),
+    SUCCESS(true, 200, "요청에 성공하였습니다."),
 
 
     /**
@@ -42,12 +42,15 @@ public enum BaseResponseStatus {
 
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
-    NOT_FOUND_USERS_ID(false,3014,"없는 아이디입니다"),
+    NOT_FOUND_USERS_ID(false,3014,"없는 아이디입니다."),
     INVALID_PASSWORD(false, 3015, "비밀번호가 다릅니다."),
     EXPIRED_USERS(false, 3016, "탈퇴한 회원입니다."),
 
+    // Place
+    NOT_FOUND_PLACE(false, 3021, "없는 장소입니다."),
 
-
+    // Posting
+    NOT_FOUND_POSTING(false, 3031, "게시글이 존재하지 않습니다."),
 
     /**
      * 4000 : Database, Server 오류
