@@ -24,12 +24,12 @@ public class LikeController {
 
     @PostMapping("/like")
     @ApiOperation(value = "좋아요 생성", notes = "해당 게시물에 좋아요를 누름")
-    public ResponseEntity<String> addLike(@PathVariable Long postingId) {
+    public ResponseEntity<String> addLike(@PathVariable Long posting_id) {
         Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
                 -> new IllegalStateException("로그인을 해주세요"));
         boolean result = false;
         if (Objects.nonNull(currentUser)) {
-            result = likeService.addLike(currentUser, postingId);
+            result = likeService.addLike(currentUser, posting_id);
         }
 
         if (result == true) {
@@ -41,11 +41,11 @@ public class LikeController {
 
     @DeleteMapping("/like")
     @ApiOperation(value = "좋아요 취소", notes = "해당 게시물에 좋아요 취소하기")
-    public ResponseEntity<String> cancelLike(@PathVariable Long postingId) {
+    public ResponseEntity<String> cancelLike(@PathVariable Long posting_id) {
         Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
                 -> new IllegalStateException("로그인을 해주세요"));
         if (currentUser != null) {
-            likeService.cancelLike(currentUser, postingId);
+            likeService.cancelLike(currentUser, posting_id);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -53,10 +53,10 @@ public class LikeController {
 
     @GetMapping("/like")
     @ApiOperation(value = "좋아요 개수", notes = "해당 게시물에 좋아요 개수 세기")
-    public ResponseEntity<String> countLike(@PathVariable Long postingId) {
+    public ResponseEntity<String> countLike(@PathVariable Long posting_id) {
         Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
                 -> new IllegalStateException("로그인을 해주세요"));
-        String result = likeService.count(postingId, currentUser);
+        String result = likeService.count(posting_id, currentUser);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

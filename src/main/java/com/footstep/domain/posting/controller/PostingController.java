@@ -1,5 +1,8 @@
 package com.footstep.domain.posting.controller;
 
+import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.BaseResponse;
+import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.dto.*;
 import com.footstep.domain.posting.service.PlaceService;
 import io.swagger.annotations.*;
@@ -16,8 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 @ApiResponses({
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 500, message = "Internal Server Error"),
+        @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
 })
 @RestController
 @RequiredArgsConstructor
@@ -31,20 +34,36 @@ public class PostingController {
             value = "특정 위치의 발자취 장소(팝업) 조회",
             notes = "특정 위치 ID를 이용해 현재 사용자가 해당 위치에 생성한 발자취에 대한 간략한 정보 조회",
             response = SpecificPlaceDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 3021, message = "없는 장소입니다."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
     @GetMapping("/{place_id}")
-    public SpecificPlaceDto viewSpecificPlace(
+    public BaseResponse<SpecificPlaceDto> viewSpecificPlace(
             @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id) {
-        return placeService.viewSpecificPlace(place_id);
+        try {
+            return new BaseResponse<>(placeService.viewSpecificPlace(place_id));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     @ApiOperation(
             value = "특정 위치의 발자취 장소(팝업) 클릭 후 게시물 리스트 조회",
             notes = "특정 위치 ID를 이용해 현재 사용자가 해당 위치에 생성한 발자취에 대해 리스트 형태로 조회",
             response = PostingListResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 3021, message = "없는 장소입니다."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
     @GetMapping("/{place_id}/list")
-    public PostingListResponseDto viewSpecificPlaceList(
+    public BaseResponse<PostingListResponseDto> viewSpecificPlaceList(
             @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id) {
-        return placeService.viewSpecificPlaceList(place_id);
+        try {
+            return new BaseResponse<>(placeService.viewSpecificPlaceList(place_id));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     @ApiOperation(
@@ -52,8 +71,12 @@ public class PostingController {
             notes = "사용자가 생성한 모든 발자취의 위치 정보 조회",
             response = AllPlaceDto.class)
     @GetMapping("/all")
-    public AllPlaceDto viewAllPlace() {
-        return placeService.viewAllPlace();
+    public BaseResponse<AllPlaceDto> viewAllPlace() {
+        try {
+            return new BaseResponse<>(placeService.viewAllPlace());
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     @ApiOperation(
@@ -64,31 +87,50 @@ public class PostingController {
             @ApiImplicitParam(name = "AccessToken", value = "asdasdsad", required = true, dataTypeClass = String.class)
     )
     @PostMapping("/write")
-    public ResponseEntity uploadPosting(@RequestBody CreatePostingDto createPostingDto) {
-        postingService.uploadPosting(createPostingDto);
-        return new ResponseEntity(HttpStatus.OK);
+    public BaseResponse<BaseResponseStatus> uploadPosting(@RequestBody CreatePostingDto createPostingDto) {
+        try {
+            postingService.uploadPosting(createPostingDto);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     @ApiOperation(
             value = "갤러리 발자취 조회",
             notes = "현재 사용자가 생성한 발자취에 대해 리스트 형태로 조회",
             response = PostingListResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
     @GetMapping("/gallery")
-    public ResponseEntity<PostingListResponseDto> viewGallery() {
-        PostingListResponseDto result = postingService.viewGallery();
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public BaseResponse<PostingListResponseDto> viewGallery() {
+        try {
+            PostingListResponseDto result = postingService.viewGallery();
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     @ApiOperation(
             value = "발자취 게시물 상세조회",
             notes = "posting-id 넘어오면 해당 게시물 조회",
             response = SpecificPosting.class)
+    @ApiResponses({
+            @ApiResponse(code = 3021, message = "없는 장소입니다."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
     @ResponseBody
     @GetMapping("/posting/{posting-id}")
-    public ResponseEntity<SpecificPosting> specificPosting(
+    public BaseResponse<SpecificPosting> specificPosting(
             @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("posting-id") Long posting_id) {
-        SpecificPosting result = postingService.viewSpecificPosting(posting_id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        try {
+            SpecificPosting result = postingService.viewSpecificPosting(posting_id);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
 
     }
 }
