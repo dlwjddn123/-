@@ -54,6 +54,8 @@ public enum BaseResponseStatus {
 
     // Comment
     NOT_FOUND_COMMENT(false, 3041, "댓글이 존재하지 않습니다."),
+    // Like
+    NOT_FOUND_LIKE(false, 3051, "좋아요를 찾을 수 없습니다."),
 
     /**
      * 4000 : Database, Server 오류
