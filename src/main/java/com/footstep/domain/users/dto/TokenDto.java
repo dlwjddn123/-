@@ -1,6 +1,7 @@
 package com.footstep.domain.users.dto;
 
 import com.footstep.global.config.jwt.constants.JwtHeaderUtil;
+import io.swagger.annotations.ApiParam;
 import lombok.*;
 
 @Getter

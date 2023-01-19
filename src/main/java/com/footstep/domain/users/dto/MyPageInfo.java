@@ -10,5 +10,6 @@ import lombok.*;
 public class MyPageInfo {
 
     private String nickname;
+
     private int postingCount;
 }

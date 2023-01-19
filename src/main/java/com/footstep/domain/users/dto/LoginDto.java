@@ -1,5 +1,7 @@
 package com.footstep.domain.users.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import lombok.*;
 
 @Getter
@@ -9,6 +11,9 @@ import lombok.*;
 @Builder
 public class LoginDto {
 
+    @ApiModelProperty(example = "lee1234@naver.com")
     private String email;
+
+    @ApiModelProperty(example = "leejw1234")
     private String password;
 }
