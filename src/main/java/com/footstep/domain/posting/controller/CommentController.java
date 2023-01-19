@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/footstep/{posting_id}")
+@RequestMapping("/footstep")
 @Api(tags = {"댓글 API"})
 public class CommentController {
 
@@ -25,7 +25,7 @@ public class CommentController {
             @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
     })
 
-    @PostMapping("/comment")
+    @PostMapping("/{posting_id}/comment")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true),
             @ApiImplicitParam(name = "createCommentDto", value = "댓글 내용", required = true)
@@ -42,18 +42,12 @@ public class CommentController {
     }
 
     @PatchMapping("/{comment_id}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true),
-            @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다."),
-            @ApiResponse(code = 3041, message = "해당 댓글이 존재하지 않습니다")
-    })
+    @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true)
+    @ApiResponse(code = 3041, message = "해당 댓글이 존재하지 않습니다")
     @ApiOperation(value = "댓글 삭제", notes = "해당 댓글 삭제")
-    public BaseResponse<BaseResponseStatus> deleteComment(@PathVariable Long posting_id, @PathVariable Long comment_id) {
+    public BaseResponse<BaseResponseStatus> deleteComment( @PathVariable Long comment_id) {
         try {
-            commentService.deleteComment(comment_id, posting_id);
+            commentService.deleteComment(comment_id);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
 
         } catch (BaseException exception) {
@@ -63,7 +57,7 @@ public class CommentController {
     }
 
 
-    @GetMapping("/comments/count")
+    @GetMapping("/{posting_id}/comments/count")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "posting_id", value = "해당 게시물 아이디", required = true),
     })
