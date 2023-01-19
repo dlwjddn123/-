@@ -36,7 +36,13 @@ public class PostingService {
     public void uploadPosting(CreatePostingDto createPostingDto) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        Place createPlace = placeService.createPlace(createPostingDto.getCreatePlaceDto());
+        CreatePlaceDto createPlaceDto = createPostingDto.getCreatePlaceDto();
+        Optional<Place> place = placeService.getPlace(createPlaceDto);
+        Place createPlace;
+        if (place.isEmpty())
+            createPlace = placeService.createPlace(createPlaceDto);
+        else
+            createPlace = place.get();
         Posting posting = Posting.builder()
                 .title(createPostingDto.getTitle())
                 .content(createPostingDto.getContent())

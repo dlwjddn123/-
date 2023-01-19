@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     Optional<Place> findByName(String placeName);
+    Optional<Place> findByLatitudeAndLongitude(Double latitude, Double longitude);
 }

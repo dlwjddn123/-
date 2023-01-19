@@ -46,6 +46,12 @@ public class PlaceService {
         return place;
     }
 
+    public Optional<Place> getPlace(CreatePlaceDto createPlaceDto) {
+        Optional<Place> place = placeRepository
+                .findByLatitudeAndLongitude(createPlaceDto.getLatitude(), createPlaceDto.getLongitude());
+        return place;
+    }
+
     public SpecificPlaceDto viewSpecificPlace(Long placeId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
