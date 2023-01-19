@@ -1,18 +1,16 @@
 package com.footstep.domain.posting.controller;
 
+import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.BaseResponse;
+import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.service.LikeService;
-import com.footstep.domain.users.domain.Users;
 import com.footstep.domain.users.repository.UsersRepository;
-import com.footstep.global.config.security.util.SecurityUtils;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,43 +18,53 @@ import java.util.Objects;
 public class LikeController {
 
     private final LikeService likeService;
-    private final UsersRepository usersRepository;
 
+    @ApiResponses({
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
+    })
     @PostMapping("/like")
+    @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
     @ApiOperation(value = "좋아요 생성", notes = "해당 게시물에 좋아요를 누름")
-    public ResponseEntity<String> addLike(@PathVariable Long postingId) {
-        Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
-                -> new IllegalStateException("로그인을 해주세요"));
-        boolean result = false;
-        if (Objects.nonNull(currentUser)) {
-            result = likeService.addLike(currentUser, postingId);
-        }
+    public BaseResponse<String> addLike(
+            @ApiParam(value = "게시물 ID", required = true, example = "1") @PathVariable Long posting_id) {
 
-        if (result == true) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        try {
+            likeService.addLike(posting_id);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
     @DeleteMapping("/like")
+    @ApiResponses({
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다."),
+            @ApiResponse(code = 3051, message = "해당 좋아요가 존재하지 않습니다")
+    })
     @ApiOperation(value = "좋아요 취소", notes = "해당 게시물에 좋아요 취소하기")
-    public ResponseEntity<String> cancelLike(@PathVariable Long postingId) {
-        Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
-                -> new IllegalStateException("로그인을 해주세요"));
-        if (currentUser != null) {
-            likeService.cancelLike(currentUser, postingId);
+    public BaseResponse<String> cancelLike(
+            @ApiParam(value = "게시물 ID", required = true, example = "1") @PathVariable Long posting_id) {
+        try {
+            likeService.cancelLike(posting_id);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @GetMapping("/like")
+    @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     @ApiOperation(value = "좋아요 개수", notes = "해당 게시물에 좋아요 개수 세기")
-    public ResponseEntity<String> countLike(@PathVariable Long postingId) {
-        Users currentUser = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(()
-                -> new IllegalStateException("로그인을 해주세요"));
-        String result = likeService.count(postingId, currentUser);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public BaseResponse<String> countLike(
+            @ApiParam(value = "게시물 ID", required = true, example = "1") @PathVariable Long posting_id) {
+        try {
+            String result = likeService.count(posting_id);
+            return new BaseResponse<>(result);
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+
     }
 }
