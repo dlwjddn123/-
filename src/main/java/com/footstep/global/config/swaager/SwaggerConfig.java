@@ -43,11 +43,11 @@ public class SwaggerConfig {
     }
 
     private ApiKey accessApiKey() {
-        return new ApiKey("JWT-AccessToken", "Authorization", "header");
+        return new ApiKey("Authorization", "Authorization", "header");
     }
 
     private ApiKey refreshApiKey() {
-        return new ApiKey("JWT-RefreshToken", "RefreshToken", "header");
+        return new ApiKey("RefreshToken", "RefreshToken", "header");
     }
 
     private SecurityContext securityContext() {
@@ -61,6 +61,6 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes1 = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         authorizationScopes1[0] = authorizationScope1;
-        return Arrays.asList(new SecurityReference("JWT-AccessToken", authorizationScopes), new SecurityReference("JWT-RefreshToken", authorizationScopes1));
+        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes), new SecurityReference("RefreshToken", authorizationScopes1));
     }
 }
