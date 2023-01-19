@@ -1,6 +1,8 @@
 package com.footstep.domain.posting.service;
 
+import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.Status;
+import static com.footstep.domain.base.BaseResponseStatus.*;
 import com.footstep.domain.posting.domain.place.City;
 import com.footstep.domain.posting.domain.place.Place;
 import com.footstep.domain.posting.domain.posting.Posting;
@@ -44,14 +46,14 @@ public class PlaceService {
         return place;
     }
 
-    public SpecificPlaceDto viewSpecificPlace(Long placeId) {
+    public SpecificPlaceDto viewSpecificPlace(Long placeId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
-                .orElseThrow(() -> new IllegalStateException("로그인을 해주세요"));
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Place place = placeRepository.findById(placeId)
-                .orElseThrow(() -> new NullPointerException("해당 장소가 없습니다."));
+                .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
         List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByCreatedDateDesc(currentUsers, place);
         if (postings.isEmpty())
-            throw new NullPointerException("해당 장소에 작성된 게시글이 없습니다.");
+            throw new BaseException(NOT_FOUND_POSTING);
         return SpecificPlaceDto.builder()
                 .name(place.getName())
                 .imageUrl(postings.get(0).getImageUrl())
@@ -59,14 +61,14 @@ public class PlaceService {
                 .build();
     }
 
-    public PostingListResponseDto viewSpecificPlaceList(Long placeId) {
+    public PostingListResponseDto viewSpecificPlaceList(Long placeId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
-                .orElseThrow(() -> new IllegalStateException("로그인을 해주세요"));
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Place place = placeRepository.findById(placeId)
-                .orElseThrow(() -> new NullPointerException("해당 장소가 없습니다."));
+                .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
         List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByCreatedDateDesc(currentUsers, place);
         if (postings.isEmpty())
-            throw new NullPointerException("해당 장소에 작성된 게시글이 없습니다.");
+            throw new BaseException(NOT_FOUND_POSTING);
         List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
 
         List<PostingListDto> postingListDto = new ArrayList<>();
@@ -85,9 +87,9 @@ public class PlaceService {
         return new PostingListResponseDto(postingListDto, (long) new HashSet<>(dates).stream().toList().size());
     }
 
-    public AllPlaceDto viewAllPlace() {
+    public AllPlaceDto viewAllPlace() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
-                .orElseThrow(() -> new IllegalStateException("로그인을 해주세요"));
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         List<Posting> postings = postingRepository.findByUsers(currentUsers);
         List<Long> placeIds = new ArrayList<>();
         for (Posting posting : postings) {
