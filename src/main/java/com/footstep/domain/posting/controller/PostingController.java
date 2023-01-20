@@ -33,7 +33,7 @@ public class PostingController {
     @ApiOperation(
             value = "발자취 생성",
             notes = "발자취(게시물) 생성",
-            response = ResponseEntity.class)
+            response = CreatePostingDto.class)
     @PostMapping("/write")
     public BaseResponse<BaseResponseStatus> uploadPosting(@RequestBody CreatePostingDto createPostingDto) {
         try {
@@ -79,6 +79,5 @@ public class PostingController {
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
-
     }
 }

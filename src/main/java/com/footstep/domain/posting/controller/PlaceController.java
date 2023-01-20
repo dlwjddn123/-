@@ -6,7 +6,6 @@ import com.footstep.domain.posting.dto.AllPlaceDto;
 import com.footstep.domain.posting.dto.CreatePlaceDto;
 import com.footstep.domain.posting.dto.PostingListResponseDto;
 import com.footstep.domain.posting.dto.SpecificPlaceDto;
-import com.footstep.domain.posting.repository.PlaceRepository;
 import com.footstep.domain.posting.service.PlaceService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
