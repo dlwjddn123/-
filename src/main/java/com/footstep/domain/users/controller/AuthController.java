@@ -2,12 +2,15 @@ package com.footstep.domain.users.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
+import com.footstep.domain.posting.dto.AllPlaceDto;
 import com.footstep.domain.users.dto.LoginDto;
 import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.service.AuthService;
 import com.footstep.global.config.jwt.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,14 @@ public class AuthController {
     private final AuthService authService;
     private final JwtTokenUtil jwtTokenUtil;
 
-    @ApiOperation(value = "로그인")
+    @ApiOperation(
+            value = "로그인",
+            notes = "이메일과 비밀번호를 입력하여 로그인")
+    @ApiResponses({
+            @ApiResponse(code = 3014, message = "없는 아이디입니다."),
+            @ApiResponse(code = 3015, message = "비밀번호가 다릅니다."),
+            @ApiResponse(code = 3016, message = "탈퇴한 회원입니다."),
+    })
     @PostMapping("/login")
     public BaseResponse<TokenDto> login(@RequestBody LoginDto loginDto) {
         try {
@@ -29,6 +39,13 @@ public class AuthController {
         }
     }
 
+    @ApiOperation(
+            value = "토큰 재발급",
+            notes = "로그인 유지를 위한 AccessToken 재발급")
+    @ApiResponses({
+            @ApiResponse(code = 2001, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다.")
+    })
     @PostMapping("/reissue")
     public BaseResponse<TokenDto> reissue(@RequestHeader("RefreshToken") String refreshToken) {
         try {
@@ -39,6 +56,14 @@ public class AuthController {
 
     }
 
+    @ApiOperation(
+            value = "로그아웃",
+            notes = "현재 로그인 되어있는 유저를 로그아웃")
+    @ApiResponses({
+            @ApiResponse(code = 2001, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다."),
+            @ApiResponse(code = 2006, message = "잘못된 접근입니다.")
+    })
     @PostMapping("/logout")
     public BaseResponse<String> logout(@RequestHeader("Authorization") String accessToken,
                        @RequestHeader("RefreshToken") String refreshToken) {
