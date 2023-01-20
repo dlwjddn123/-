@@ -27,11 +27,10 @@ public class CommentController {
 
     @PostMapping("/{posting_id}/comment")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true),
-            @ApiImplicitParam(name = "createCommentDto", value = "댓글 내용", required = true)
+            @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true, example = "1")
     })
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
-    @ApiOperation(value = "댓글 생성", notes = "해당 게시글에 댓글 달기")
+    @ApiOperation(value = "댓글 생성", notes = "해당 게시글에 댓글 달기", response = CreateCommentDto.class)
     public BaseResponse<BaseResponseStatus> addComment(@PathVariable Long posting_id, @RequestBody CreateCommentDto createCommentDto) {
         try {
             commentService.addComment(createCommentDto.getContent(), posting_id);
@@ -42,7 +41,7 @@ public class CommentController {
     }
 
     @PatchMapping("/{comment_id}")
-    @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true)
+    @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true, example = "1")
     @ApiResponse(code = 3041, message = "해당 댓글이 존재하지 않습니다")
     @ApiOperation(value = "댓글 삭제", notes = "해당 댓글 삭제")
     public BaseResponse<BaseResponseStatus> deleteComment( @PathVariable Long comment_id) {
@@ -56,10 +55,9 @@ public class CommentController {
         }
     }
 
-
     @GetMapping("/{posting_id}/comments/count")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "posting_id", value = "해당 게시물 아이디", required = true),
+            @ApiImplicitParam(name = "posting_id", value = "해당 게시물 아이디", required = true, example = "1"),
     })
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     @ApiOperation(value = "댓글 개수", notes = "해당 게시물에 댓글 개수 세기")

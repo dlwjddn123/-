@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.footstep.domain.base.BaseResponseStatus.*;
 
 @Transactional
@@ -24,23 +26,17 @@ public class LikeService {
     private final PostingRepository postingRepository;
     private final UsersRepository usersRepository;
 
-    public void addLike(Long postingId) throws BaseException {
+    public void like(Long postingId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Posting posting = postingRepository.findById(postingId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_POSTING));
-        Likes likes = new Likes(currentUsers, posting);
-        likeRepository.save(new Likes(currentUsers, posting));
-    }
-
-    public void cancelLike(Long postingId) throws BaseException{
-        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
-                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        Posting posting = postingRepository.findById(postingId)
-                .orElseThrow(()->new BaseException(NOT_FOUND_POSTING));
-        Likes likes = likeRepository.findByUsersAndPosting(currentUsers, posting)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_LIKE));
-        likeRepository.delete(likes);
+        Optional<Likes> isLike = likeRepository.findByUsers(currentUsers);
+        if (!isLike.isEmpty()) {
+            likeRepository.delete(isLike.get());
+        } else {
+            likeRepository.save(new Likes(currentUsers, posting));
+        }
     }
 
     public String count(Long postingId) throws BaseException{
@@ -50,5 +46,4 @@ public class LikeService {
         String result = String.valueOf(likeCount);
         return result;
     }
-
 }
