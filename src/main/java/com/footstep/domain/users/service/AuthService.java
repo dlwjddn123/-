@@ -1,5 +1,7 @@
 package com.footstep.domain.users.service;
 
+import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.base.Status;
 import com.footstep.domain.users.domain.Users;
 import com.footstep.domain.users.domain.auth.LogoutAccessToken;
@@ -13,6 +15,7 @@ import com.footstep.domain.users.repository.auth.RefreshTokenRedisRepository;
 import com.footstep.global.config.jwt.JwtTokenUtil;
 import com.footstep.global.config.jwt.constants.JwtExpiration;
 import com.footstep.global.config.redis.CacheKey;
+import com.footstep.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
@@ -23,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.BlockingDeque;
 
+import static com.footstep.domain.base.BaseResponseStatus.*;
 import static com.footstep.global.config.jwt.constants.JwtExpiration.REFRESH_TOKEN_EXPIRATION_TIME;
 
 @Service
@@ -37,15 +42,10 @@ public class AuthService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
-    public void join(JoinDto joinDto) {
-        joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
-        usersRepository.save(Users.ofUser(joinDto));
-    }
-
-    public TokenDto login(LoginDto loginDto) {
-        Users users = usersRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new NoSuchElementException("회원이 없습니다."));
+    public TokenDto login(LoginDto loginDto) throws BaseException {
+        Users users = usersRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new BaseException(NOT_FOUND_USERS_ID));
         if (users.getStatus().equals(Status.EXPIRED)) {
-            throw new IllegalArgumentException("탈퇴한 회원입니다.");
+            throw new BaseException(BaseResponseStatus.EXPIRED_USERS);
         }
         checkPassword(loginDto.getPassword(), users.getPassword());
         String username = users.getEmail();
@@ -54,9 +54,9 @@ public class AuthService {
         return TokenDto.of(accessToken, refreshToken.getRefreshToken());
     }
 
-    private void checkPassword(String rawPassword, String findMemberPassword) {
+    private void checkPassword(String rawPassword, String findMemberPassword) throws BaseException {
         if (!passwordEncoder.matches(rawPassword, findMemberPassword)) {
-            throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
+            throw new BaseException(INVALID_PASSWORD);
         }
     }
 
@@ -67,7 +67,11 @@ public class AuthService {
 
 
     @CacheEvict(value = CacheKey.USER, key = "#username")
-    public void logout(TokenDto tokenDto, String username) {
+    public void logout(TokenDto tokenDto, String username) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        if (!users.getEmail().equals(username)) {
+            throw new BaseException(BAD_REQUEST);
+        }
         String accessToken = resolveToken(tokenDto.getAccessToken());
         long remainMilliSeconds = jwtTokenUtil.getRemainMilliSeconds(accessToken);
         refreshTokenRedisRepository.deleteById(username);
@@ -78,15 +82,15 @@ public class AuthService {
         return token.substring(7);
     }
 
-    public TokenDto reissue(String refreshToken) {
+    public TokenDto reissue(String refreshToken) throws BaseException {
         refreshToken = resolveToken(refreshToken);
         String username = getCurrentUsername();
-        RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(username).orElseThrow(NoSuchElementException::new);
+        RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(username).orElseThrow(() -> new BaseException(INVALID_JWT));
 
         if (refreshToken.equals(redisRefreshToken.getRefreshToken())) {
             return reissueRefreshToken(refreshToken, username);
         }
-        throw new IllegalArgumentException("토큰이 일치하지 않습니다.");
+        throw new BaseException(INVALID_REFRESH_TOKEN);
     }
 
     public String getCurrentUsername() {

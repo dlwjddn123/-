@@ -1,15 +1,20 @@
 package com.footstep.domain.users.controller;
 
-import com.footstep.domain.users.dto.JoinDto;
+import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.BaseResponse;
+import com.footstep.domain.posting.dto.AllPlaceDto;
 import com.footstep.domain.users.dto.LoginDto;
 import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.service.AuthService;
 import com.footstep.global.config.jwt.JwtTokenUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@Api(tags = {"회원 인증 API"})
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -17,37 +22,58 @@ public class AuthController {
     private final AuthService authService;
     private final JwtTokenUtil jwtTokenUtil;
 
-    @GetMapping("/health")
-    public String health() {
-        return "OK";
-    }
-
-    @PostMapping("/join")
-    public String join(@RequestBody JoinDto joinDto) {
-        authService.join(joinDto);
-        return "회원가입 완료";
-    }
-
-    @GetMapping("/isLogin")
-    public String isLogin() {
-        return authService.getCurrentUsername();
-    }
-
+    @ApiOperation(
+            value = "로그인",
+            notes = "이메일과 비밀번호를 입력하여 로그인")
+    @ApiResponses({
+            @ApiResponse(code = 3014, message = "없는 아이디입니다."),
+            @ApiResponse(code = 3015, message = "비밀번호가 다릅니다."),
+            @ApiResponse(code = 3016, message = "탈퇴한 회원입니다."),
+    })
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
-        return ResponseEntity.ok(authService.login(loginDto));
+    public BaseResponse<TokenDto> login(@RequestBody LoginDto loginDto) {
+        try {
+            return new BaseResponse<>(authService.login(loginDto));
+        }catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
+    @ApiOperation(
+            value = "토큰 재발급",
+            notes = "로그인 유지를 위한 AccessToken 재발급")
+    @ApiResponses({
+            @ApiResponse(code = 2001, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다.")
+    })
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestHeader("RefreshToken") String refreshToken) {
-        return ResponseEntity.ok(authService.reissue(refreshToken));
+    public BaseResponse<TokenDto> reissue(@RequestHeader("RefreshToken") String refreshToken) {
+        try {
+            return new BaseResponse<>(authService.reissue(refreshToken));
+        }catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
     }
 
+    @ApiOperation(
+            value = "로그아웃",
+            notes = "현재 로그인 되어있는 유저를 로그아웃")
+    @ApiResponses({
+            @ApiResponse(code = 2001, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다."),
+            @ApiResponse(code = 2006, message = "잘못된 접근입니다.")
+    })
     @PostMapping("/logout")
-    public void logout(@RequestHeader("Authorization") String accessToken,
+    public BaseResponse<String> logout(@RequestHeader("Authorization") String accessToken,
                        @RequestHeader("RefreshToken") String refreshToken) {
         String username = jwtTokenUtil.getUsername(resolveToken(accessToken));
-        authService.logout(TokenDto.of(accessToken, refreshToken), username);
+        try {
+            authService.logout(TokenDto.of(accessToken, refreshToken), username);
+            return new BaseResponse<>("로그아웃 되었습니다.");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     private String resolveToken(String accessToken) {
