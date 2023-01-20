@@ -33,11 +33,9 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public void deleteComment(Long commentId, Long postingId) throws BaseException {
+    public void deleteComment(Long commentId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        Posting posting = postingRepository.findById(postingId)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_POSTING));
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new BaseException(NOT_FOUND_COMMENT));
         comment.changeStatus();
         commentRepository.save(comment);
