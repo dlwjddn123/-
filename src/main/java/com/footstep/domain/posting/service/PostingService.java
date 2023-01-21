@@ -47,6 +47,7 @@ public class PostingService {
                 .title(createPostingDto.getTitle())
                 .content(createPostingDto.getContent())
                 .recordDate(createPostingDto.getRecordDate())
+                .imageUrl(createPostingDto.getImageUrl())
                 .place(createPlace)
                 .users(currentUsers)
                 .visibilityStatusCode(createPostingDto.getVisibilityStatusCode())
@@ -71,7 +72,7 @@ public class PostingService {
                     .imageUrl(posting.getImageUrl())
                     .title(posting.getTitle())
                     .likes((long) posting.getLikeList().size())
-                    .postings((long) Collections.frequency(dates, posting.getRecordDate()))
+                    .postingCount((long) Collections.frequency(dates, posting.getRecordDate()))
                     .postingId(posting.getId())
                     .build();
             postingListDto.add(dto);
@@ -107,6 +108,5 @@ public class PostingService {
                                 .content(c.getContent()).build()).collect(Collectors.toList()))
                 .commentNum(Integer.toString(countComment))
                 .build();
-
     }
 }

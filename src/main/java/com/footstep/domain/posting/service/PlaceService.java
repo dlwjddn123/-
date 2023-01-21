@@ -85,7 +85,7 @@ public class PlaceService {
                     .imageUrl(posting.getImageUrl())
                     .title(posting.getTitle())
                     .likes((long) posting.getLikeList().size())
-                    .postings((long) Collections.frequency(dates, posting.getRecordDate()))
+                    .postingCount((long) Collections.frequency(dates, posting.getRecordDate()))
                     .postingId(posting.getId())
                     .build();
             postingListDto.add(dto);
