@@ -44,7 +44,7 @@ public class CommentController {
     @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true, example = "1")
     @ApiResponse(code = 3041, message = "해당 댓글이 존재하지 않습니다")
     @ApiOperation(value = "댓글 삭제", notes = "해당 댓글 삭제")
-    public BaseResponse<BaseResponseStatus> deleteComment( @PathVariable Long comment_id) {
+    public BaseResponse<BaseResponseStatus> deleteComment(@PathVariable Long comment_id) {
         try {
             commentService.deleteComment(comment_id);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);

@@ -26,7 +26,7 @@ public class LikeService {
     private final PostingRepository postingRepository;
     private final UsersRepository usersRepository;
 
-    public void like(Long postingId) throws BaseException {
+    public String like(Long postingId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Posting posting = postingRepository.findById(postingId)
@@ -34,8 +34,10 @@ public class LikeService {
         Optional<Likes> isLike = likeRepository.findByUsers(currentUsers);
         if (!isLike.isEmpty()) {
             likeRepository.delete(isLike.get());
+            return "좋아요를 취소하였습니다.";
         } else {
             likeRepository.save(new Likes(currentUsers, posting));
+            return "좋아요를 눌렀습니다.";
         }
     }
 
