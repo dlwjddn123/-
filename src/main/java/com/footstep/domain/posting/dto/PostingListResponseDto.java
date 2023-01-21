@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class PostingListResponseDto {
 
-    List<PostingListDto> postingListDto;
-    @ApiModelProperty(notes = "게시일 수", example = "3")
-    Long uploadDates;
+    private List<PostingListDto> postingListDto;
+    @ApiModelProperty(notes = "게시글 날짜별 카테고리 개수", example = "3")
+    private Long uploadDates;
 }
