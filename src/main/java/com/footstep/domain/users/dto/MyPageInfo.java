@@ -15,4 +15,7 @@ public class MyPageInfo {
 
     @ApiModelProperty(example = "5")
     private int postingCount;
+
+    @ApiModelProperty(example = "url")
+    private String profileImageUrl;
 }
