@@ -2,7 +2,6 @@ package com.footstep.domain.posting.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
-import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.service.LikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +25,8 @@ public class LikeController {
     public BaseResponse<String> like(
             @ApiParam(value = "게시물 ID", required = true, example = "1") @PathVariable Long posting_id) {
         try {
-            likeService.like(posting_id);
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+            String result = likeService.like(posting_id);
+            return new BaseResponse<>(result);
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
