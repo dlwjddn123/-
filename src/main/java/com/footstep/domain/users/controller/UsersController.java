@@ -30,11 +30,8 @@ public class UsersController {
             @ApiResponse(code = 3013, message = "중복된 이메일입니다."),
             @ApiResponse(code = 3017, message = "이미 존재하는 닉네임입니다.")
     })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc0ODY5OTY0fQ.lobF3T2kLImKawBXnMjrNr5KCww9e74h5xLqblIFNtk")
-    })
     @PostMapping("/join")
-    public BaseResponse<String> join(@RequestHeader("Authorization")String accessToken, @RequestBody JoinDto joinDto) {
+    public BaseResponse<String> join(@RequestBody JoinDto joinDto) {
         try {
             usersService.join(joinDto);
             return new BaseResponse<>("회원 가입이 완료되었습니다.");

@@ -70,7 +70,6 @@ public class S3UploadUtil {
             }
             return Optional.of(convertFile);
         }
-
         return Optional.empty();
     }
 }

@@ -69,7 +69,7 @@ public class PostingController {
     @ResponseBody
     @GetMapping("/posting/{posting-id}")
     public BaseResponse<SpecificPosting> specificPosting(
-            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("posting-id") Long posting_id,
+            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id") Long posting_id,
             @RequestHeader("Authorization")String accessToken) {
         try {
             SpecificPosting result = postingService.viewSpecificPosting(posting_id);

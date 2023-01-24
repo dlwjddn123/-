@@ -82,11 +82,4 @@ public class PlaceController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
-    @PostMapping("/select-place")
-    public ResponseEntity createSelectedPlace(@RequestBody CreatePlaceDto createPlaceDto,
-                                              @RequestHeader("Authorization")String accessToken) {
-        placeService.createPlace(createPlaceDto);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 }
