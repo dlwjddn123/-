@@ -30,7 +30,7 @@ public class CityConverter {
     }
 
     public static int getCityCode(String address) {
-        Integer cityCode = cityMapper.get(address);
+        Integer cityCode = cityMapper.get(address.substring(0, 2));
         return cityCode;
     }
 }
