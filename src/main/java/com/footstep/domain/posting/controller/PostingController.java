@@ -20,6 +20,9 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
+@ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxlZTEyMzQ1QG5hdmVyLmNvbSIsImlhdCI6MTY3NDUyMzk4MywiZXhwIjoxNjc0ODI2MzgzfQ.aq8EcJLI-oyI-Qs4vF_SyVP0B6a0C4CXDU624bNSQRg")
+})
 public class PostingController {
 
     private final PostingService postingService;
@@ -28,7 +31,7 @@ public class PostingController {
             value = "발자취 생성",
             notes = "발자취(게시물) 생성")
     @PostMapping(value = "/write")
-    public BaseResponse<BaseResponseStatus> uploadPosting(@ModelAttribute CreatePostingDto createPostingDto, @RequestPart MultipartFile image) throws IOException {
+    public BaseResponse<BaseResponseStatus> uploadPosting(@RequestHeader("Authorization")String accessToken, @ModelAttribute CreatePostingDto createPostingDto, @RequestPart MultipartFile image) throws IOException {
         try {
             postingService.uploadPosting(image, createPostingDto);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
@@ -46,7 +49,7 @@ public class PostingController {
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
     @GetMapping("/gallery")
-    public BaseResponse<PostingListResponseDto> viewGallery() {
+    public BaseResponse<PostingListResponseDto> viewGallery(@RequestHeader("Authorization")String accessToken) {
         try {
             PostingListResponseDto result = postingService.viewGallery();
             return new BaseResponse<>(result);
@@ -66,7 +69,8 @@ public class PostingController {
     @ResponseBody
     @GetMapping("/posting/{posting-id}")
     public BaseResponse<SpecificPosting> specificPosting(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("posting-id") Long posting_id) {
+            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("posting-id") Long posting_id,
+            @RequestHeader("Authorization")String accessToken) {
         try {
             SpecificPosting result = postingService.viewSpecificPosting(posting_id);
             return new BaseResponse<>(result);

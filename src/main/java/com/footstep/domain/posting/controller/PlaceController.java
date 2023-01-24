@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
+@ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxlZTEyMzQ1QG5hdmVyLmNvbSIsImlhdCI6MTY3NDUyMzk4MywiZXhwIjoxNjc0ODI2MzgzfQ.aq8EcJLI-oyI-Qs4vF_SyVP0B6a0C4CXDU624bNSQRg")
+})
 public class PlaceController {
 
     private final PlaceService placeService;
@@ -35,7 +38,8 @@ public class PlaceController {
     })
     @GetMapping("/{place_id}")
     public BaseResponse<SpecificPlaceDto> viewSpecificPlace(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id) {
+            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id,
+            @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificPlace(place_id));
         } catch (BaseException exception) {
@@ -54,7 +58,8 @@ public class PlaceController {
     })
     @GetMapping("/{place_id}/list")
     public BaseResponse<PostingListResponseDto> viewSpecificPlaceList(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id) {
+            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id,
+            @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificPlaceList(place_id));
         } catch (BaseException exception) {
@@ -70,7 +75,7 @@ public class PlaceController {
             @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
     })
     @GetMapping("/all")
-    public BaseResponse<AllPlaceDto> viewAllPlace() {
+    public BaseResponse<AllPlaceDto> viewAllPlace(@RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewAllPlace());
         } catch (BaseException exception) {
@@ -79,7 +84,8 @@ public class PlaceController {
     }
 
     @PostMapping("/select-place")
-    public ResponseEntity createSelectedPlace(@RequestBody CreatePlaceDto createPlaceDto) {
+    public ResponseEntity createSelectedPlace(@RequestBody CreatePlaceDto createPlaceDto,
+                                              @RequestHeader("Authorization")String accessToken) {
         placeService.createPlace(createPlaceDto);
         return new ResponseEntity(HttpStatus.OK);
     }
