@@ -11,12 +11,12 @@ import lombok.*;
 @Builder
 public class JoinDto {
 
-    @ApiModelProperty(example = "lee1234@naver.com")
+    @ApiModelProperty(example = "footstep@naver.com")
     private String email;
 
-    @ApiModelProperty(example = "leejw1234")
+    @ApiModelProperty(example = "하마")
     private String password;
 
-    @ApiModelProperty(example = "newJeans")
+    @ApiModelProperty(example = "footstep12")
     private String nickname;
 }

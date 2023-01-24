@@ -68,7 +68,7 @@ public class PostingService {
     public PostingListResponseDto viewGallery() throws BaseException {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        List<Posting> postings = postingRepository.findAllByUsersOrderByCreatedDateDesc(users);
+        List<Posting> postings = postingRepository.findAllByUsersOrderByRecordDateDesc(users);
         if (postings.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         List<PostingListDto> postingListDto = new ArrayList<>();

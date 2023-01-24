@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxlZTEyMzQ1QG5hdmVyLmNvbSIsImlhdCI6MTY3NDUyMzk4MywiZXhwIjoxNjc0ODI2MzgzfQ.aq8EcJLI-oyI-Qs4vF_SyVP0B6a0C4CXDU624bNSQRg")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc0ODY5OTY0fQ.lobF3T2kLImKawBXnMjrNr5KCww9e74h5xLqblIFNtk")
 })
 public class PlaceController {
 
@@ -38,7 +38,7 @@ public class PlaceController {
     })
     @GetMapping("/{place_id}")
     public BaseResponse<SpecificPlaceDto> viewSpecificPlace(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id,
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
             @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificPlace(place_id));
@@ -58,7 +58,7 @@ public class PlaceController {
     })
     @GetMapping("/{place_id}/list")
     public BaseResponse<PostingListResponseDto> viewSpecificPlaceList(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id,
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
             @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificPlaceList(place_id));

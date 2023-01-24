@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface PostingRepository extends JpaRepository<Posting, Long> {
 
-    List<Posting> findByUsersAndPlaceOrderByCreatedDateDesc(Users users, Place place);
+    List<Posting> findByUsersAndPlaceOrderByRecordDateDesc(Users users, Place place);
     List<Posting> findByUsers(Users users);
-    List<Posting> findAllByUsersOrderByCreatedDateDesc(Users users);
+    List<Posting> findAllByUsersOrderByRecordDateDesc(Users users);
     Optional<Posting> findById(Long postingId);
 }

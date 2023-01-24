@@ -11,6 +11,6 @@ import lombok.*;
 @Builder
 public class CreateCommentDto {
 
-    @ApiModelProperty(name = "내용", required = true, example = "댓글 내용입니다.")
+    @ApiModelProperty(name = "내용", required = true, example = "귀여워요.")
     private String content;
 }

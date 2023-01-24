@@ -11,11 +11,11 @@ import java.sql.Date;
 @Builder
 public class CreatePostingDto {
 
-    @ApiModelProperty(value = "발자취 제목", required = true, example = "제목예시")
+    @ApiModelProperty(value = "발자취 제목", required = true, example = "고양이")
     private String title;
-    @ApiModelProperty(value = "발자취 내용", required = true, example = "내용예시")
+    @ApiModelProperty(value = "발자취 내용", required = true, example = "귀여운 고양이")
     private String content;
-    @ApiModelProperty(value = "발자취 게시일", required = true, example = "2022-11-20")
+    @ApiModelProperty(value = "발자취 게시일", required = true, example = "2023-01-23")
     private Date recordDate;
     private CreatePlaceDto createPlaceDto;
     @ApiModelProperty(value = "발자취 공개 여부", required = true, example = "1")

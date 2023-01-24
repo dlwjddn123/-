@@ -2,15 +2,11 @@ package com.footstep.domain.users.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
-import com.footstep.domain.posting.dto.AllPlaceDto;
 import com.footstep.domain.users.dto.LoginDto;
 import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.service.AuthService;
 import com.footstep.global.config.jwt.JwtTokenUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +26,7 @@ public class AuthController {
             @ApiResponse(code = 3015, message = "비밀번호가 다릅니다."),
             @ApiResponse(code = 3016, message = "탈퇴한 회원입니다."),
     })
+
     @PostMapping("/login")
     public BaseResponse<TokenDto> login(@RequestBody LoginDto loginDto) {
         try {
@@ -45,6 +42,9 @@ public class AuthController {
     @ApiResponses({
             @ApiResponse(code = 2001, message = "유효하지 않은 JWT입니다."),
             @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다.")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc3MTU5NTY0fQ.zhn4mePceDlROk3vJFUOQfhHxtsmS1vsthsBIEinSIk")
     })
     @PostMapping("/reissue")
     public BaseResponse<TokenDto> reissue(@RequestHeader("RefreshToken") String refreshToken) {
@@ -63,6 +63,10 @@ public class AuthController {
             @ApiResponse(code = 2001, message = "유효하지 않은 JWT입니다."),
             @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다."),
             @ApiResponse(code = 2006, message = "잘못된 접근입니다.")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc0ODY5OTY0fQ.lobF3T2kLImKawBXnMjrNr5KCww9e74h5xLqblIFNtk"),
+            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc3MTU5NTY0fQ.zhn4mePceDlROk3vJFUOQfhHxtsmS1vsthsBIEinSIk")
     })
     @PostMapping("/logout")
     public BaseResponse<String> logout(@RequestHeader("Authorization") String accessToken,
