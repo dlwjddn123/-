@@ -21,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxlZTEyMzQ1QG5hdmVyLmNvbSIsImlhdCI6MTY3NDUyMzk4MywiZXhwIjoxNjc0ODI2MzgzfQ.aq8EcJLI-oyI-Qs4vF_SyVP0B6a0C4CXDU624bNSQRg")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc0ODY5OTY0fQ.lobF3T2kLImKawBXnMjrNr5KCww9e74h5xLqblIFNtk")
 })
 public class PostingController {
 
@@ -69,7 +69,7 @@ public class PostingController {
     @ResponseBody
     @GetMapping("/posting/{posting-id}")
     public BaseResponse<SpecificPosting> specificPosting(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("posting-id") Long posting_id,
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("posting-id") Long posting_id,
             @RequestHeader("Authorization")String accessToken) {
         try {
             SpecificPosting result = postingService.viewSpecificPosting(posting_id);

@@ -10,8 +10,8 @@ import lombok.*;
 @Builder
 public class UsersInfo {
 
-    @ApiModelProperty(example = "lee1234@naver.com")
+    @ApiModelProperty(example = "footstep@naver.com")
     private String email;
-    @ApiModelProperty(example = "newJeans")
+    @ApiModelProperty(example = "하마")
     private String username;
 }

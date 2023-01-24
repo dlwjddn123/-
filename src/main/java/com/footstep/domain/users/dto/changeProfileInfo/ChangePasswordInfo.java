@@ -11,9 +11,9 @@ import lombok.*;
 @Builder
 public class ChangePasswordInfo {
 
-    @ApiModelProperty(notes = "현재 비밀번호", example = "jungWoo1234!")
+    @ApiModelProperty(notes = "현재 비밀번호", example = "footstep12")
     private String currentPassword;
 
-    @ApiModelProperty(notes = "변경할 비밀번호", example = "jungWoo4321!")
+    @ApiModelProperty(notes = "변경할 비밀번호", example = "footstep1234")
     private String changedPassword;
 }

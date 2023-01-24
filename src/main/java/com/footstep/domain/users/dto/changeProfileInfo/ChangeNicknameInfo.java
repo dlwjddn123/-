@@ -11,6 +11,6 @@ import lombok.*;
 @Builder
 public class ChangeNicknameInfo {
 
-    @ApiModelProperty(notes = "닉네임", example = "newjeans")
+    @ApiModelProperty(notes = "닉네임", example = "고양이")
     private String nickname;
 }

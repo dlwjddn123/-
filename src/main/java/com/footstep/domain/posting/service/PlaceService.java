@@ -56,7 +56,7 @@ public class PlaceService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
-        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByCreatedDateDesc(currentUsers, place);
+        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByRecordDateDesc(currentUsers, place);
         if (postings.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         return SpecificPlaceDto.builder()
@@ -71,7 +71,7 @@ public class PlaceService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
-        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByCreatedDateDesc(currentUsers, place);
+        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByRecordDateDesc(currentUsers, place);
         if (postings.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();

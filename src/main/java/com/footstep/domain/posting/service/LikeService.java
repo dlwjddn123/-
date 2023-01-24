@@ -2,7 +2,6 @@ package com.footstep.domain.posting.service;
 
 
 import com.footstep.domain.base.BaseException;
-import com.footstep.domain.base.BaseResponse;
 import com.footstep.domain.posting.domain.Likes;
 import com.footstep.domain.posting.domain.posting.Posting;
 import com.footstep.domain.posting.repository.LikeRepository;

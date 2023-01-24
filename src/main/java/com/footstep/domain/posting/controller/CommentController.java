@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/footstep")
 @Api(tags = {"댓글 API"})
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxlZTEyMzQ1QG5hdmVyLmNvbSIsImlhdCI6MTY3NDUyMzk4MywiZXhwIjoxNjc0ODI2MzgzfQ.aq8EcJLI-oyI-Qs4vF_SyVP0B6a0C4CXDU624bNSQRg")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc0ODY5OTY0fQ.lobF3T2kLImKawBXnMjrNr5KCww9e74h5xLqblIFNtk")
 })
 public class CommentController {
 
@@ -30,7 +30,7 @@ public class CommentController {
 
     @PostMapping("/{posting_id}/comment")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true, example = "1")
+            @ApiImplicitParam(name = "posting_id", value = "게시물 아이디", required = true, example = "3")
     })
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
     @ApiOperation(value = "댓글 생성", notes = "해당 게시글에 댓글 달기", response = CreateCommentDto.class)
@@ -45,7 +45,7 @@ public class CommentController {
     }
 
     @PatchMapping("/{comment_id}")
-    @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true, example = "1")
+    @ApiImplicitParam(name = "comment_id", value = "삭제할 댓글 아이디", required = true, example = "4")
     @ApiResponse(code = 3041, message = "해당 댓글이 존재하지 않습니다")
     @ApiOperation(value = "댓글 삭제", notes = "해당 댓글 삭제")
     public BaseResponse<BaseResponseStatus> deleteComment(@PathVariable Long comment_id, @RequestHeader("Authorization")String accessToken) {
@@ -61,7 +61,7 @@ public class CommentController {
 
     @GetMapping("/{posting_id}/comments/count")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "posting_id", value = "해당 게시물 아이디", required = true, example = "1"),
+            @ApiImplicitParam(name = "posting_id", value = "해당 게시물 아이디", required = true, example = "3"),
     })
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     @ApiOperation(value = "댓글 개수", notes = "해당 게시물에 댓글 개수 세기")

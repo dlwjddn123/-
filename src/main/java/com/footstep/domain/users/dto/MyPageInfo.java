@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class MyPageInfo {
 
-    @ApiModelProperty(example = "newjeans")
+    @ApiModelProperty(example = "하마")
     private String nickname;
 
     @ApiModelProperty(example = "5")
