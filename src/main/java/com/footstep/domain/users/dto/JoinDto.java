@@ -14,9 +14,9 @@ public class JoinDto {
     @ApiModelProperty(example = "footstep@naver.com")
     private String email;
 
-    @ApiModelProperty(example = "하마")
+    @ApiModelProperty(example = "footstep12")
     private String password;
 
-    @ApiModelProperty(example = "footstep12")
+    @ApiModelProperty(example = "하마")
     private String nickname;
 }
