@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ public class Posting extends BaseTimeEntity {
     private Long id;
     private String title;
     private String content;
+    @Nullable
     private String imageUrl;
     private LocalDateTime modifiedDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

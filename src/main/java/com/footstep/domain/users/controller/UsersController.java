@@ -8,11 +8,13 @@ import com.footstep.domain.users.dto.changeProfileInfo.ChangeNicknameInfo;
 import com.footstep.domain.users.dto.changeProfileInfo.ChangePasswordInfo;
 import com.footstep.domain.users.dto.MyPageInfo;
 import com.footstep.domain.users.dto.TokenDto;
-import com.footstep.domain.users.dto.changeProfileInfo.ChangeProfileImageInfo;
 import com.footstep.domain.users.service.UsersService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Api(tags = {"회원 정보 API"})
 @ApiResponses({
@@ -89,9 +91,9 @@ public class UsersController {
     @ApiOperation(value = "프로필 이미지 변경")
     @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
     @PatchMapping("/my-page/profile")
-    public BaseResponse<String> changeProfileImage(@RequestBody ChangeProfileImageInfo changeProfileImageInfo) {
+    public BaseResponse<String> changeProfileImage(@RequestPart MultipartFile profile) throws IOException {
         try {
-            usersService.changeProfileImage(changeProfileImageInfo.getProfileImageUrl());
+            usersService.changeProfileImage(profile);
             return new BaseResponse<>("프로필 이미지가 변경되었습니다.");
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
