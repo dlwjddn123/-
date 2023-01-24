@@ -26,7 +26,6 @@ public class AuthController {
             @ApiResponse(code = 3015, message = "비밀번호가 다릅니다."),
             @ApiResponse(code = 3016, message = "탈퇴한 회원입니다."),
     })
-
     @PostMapping("/login")
     public BaseResponse<TokenDto> login(@RequestBody LoginDto loginDto) {
         try {
