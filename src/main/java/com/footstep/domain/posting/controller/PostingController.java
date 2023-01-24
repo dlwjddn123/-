@@ -4,26 +4,13 @@ import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
 import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.dto.*;
-import com.footstep.domain.posting.service.PlaceService;
 import io.swagger.annotations.*;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import com.footstep.domain.posting.service.PostingService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
-
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+
 
 @Api(tags = "발자취 게시물 API")
 @ApiResponses({
@@ -39,11 +26,9 @@ public class PostingController {
 
     @ApiOperation(
             value = "발자취 생성",
-            notes = "발자취(게시물) 생성",
-            response = CreatePostingDto.class)
-    @PostMapping(value = "/write", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public BaseResponse<BaseResponseStatus> uploadPosting(@RequestPart(value = "createPostingDto")CreatePostingDto createPostingDto,
-                                                          @RequestPart(value = "image") MultipartFile image) throws IOException {
+            notes = "발자취(게시물) 생성")
+    @PostMapping(value = "/write")
+    public BaseResponse<BaseResponseStatus> uploadPosting(@ModelAttribute CreatePostingDto createPostingDto, @RequestPart MultipartFile image) throws IOException {
         try {
             postingService.uploadPosting(image, createPostingDto);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
@@ -51,6 +36,7 @@ public class PostingController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
 
     @ApiOperation(
             value = "갤러리 발자취 조회",
