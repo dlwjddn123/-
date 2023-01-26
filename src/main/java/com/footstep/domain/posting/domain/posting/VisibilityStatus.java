@@ -18,4 +18,8 @@ public enum VisibilityStatus {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("없는 상태"));
     }
+
+    public int getCode() {
+        return code;
+    }
 }

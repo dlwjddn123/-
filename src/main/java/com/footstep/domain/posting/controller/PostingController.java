@@ -40,6 +40,51 @@ public class PostingController {
         }
     }
 
+    @ApiOperation(
+            value = "발자취 수정",
+            notes = "발자취 수정 데이터 가져오기"
+    )
+    @GetMapping("/{posting-id}/edit")
+    public BaseResponse<EditPostingDto> getPosting(@RequestHeader("Authorization")String accessToken, @PathVariable("posting-id")Long postingId) {
+        try {
+            EditPostingDto postingInfo = postingService.getPostingInfo(postingId);
+            return new BaseResponse<>(postingInfo);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "발자취 수정",
+            notes = "발자취 수정하기"
+    )
+    @PostMapping("/{posting-id}/edit")
+    public BaseResponse<String> editPosting(@PathVariable("posting-id")Long postingId,
+                                                    @RequestHeader("Authorization")String accessToken,
+                                                    @ModelAttribute CreatePostingDto createPostingDto,
+                                                    @RequestPart MultipartFile image) throws IOException {
+        try {
+            postingService.editPosting(postingId, image, createPostingDto);
+            return new BaseResponse<>("수정 성공!");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "발자취 삭제",
+            notes = "발자취 삭제하기"
+    )
+    @PatchMapping("/{posting-id}/remove")
+    public BaseResponse<String> removePosting(@PathVariable("posting-id")Long postingId, @RequestHeader("Authorization")String accessToken) {
+        try {
+            postingService.removePosting(postingId);
+            return new BaseResponse<>("삭제 성공!");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
     @ApiOperation(
             value = "갤러리 발자취 조회",
