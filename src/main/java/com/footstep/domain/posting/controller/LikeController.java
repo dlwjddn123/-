@@ -2,9 +2,7 @@ package com.footstep.domain.posting.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
-import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.service.LikeService;
-import com.footstep.domain.users.repository.UsersRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/footstep/{posting_id}")
+@ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDY2MDA5MSwiZXhwIjoxNjc0OTYyNDkxfQ.W7MNMFI43SPbcw5pLhpbsuic0_nCDRcqHKPgEipV9ko")
+})
 public class LikeController {
 
     private final LikeService likeService;
@@ -23,46 +24,29 @@ public class LikeController {
     })
     @PostMapping("/like")
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
-    @ApiOperation(value = "좋아요 생성", notes = "해당 게시물에 좋아요를 누름")
-    public BaseResponse<String> addLike(
-            @ApiParam(value = "게시물 ID", required = true, example = "1") @PathVariable Long posting_id) {
-
+    @ApiOperation(value = "좋아요 누르기", notes = "해당 게시물에 좋아요를 누름, 눌려있는 상태에서 좋아요를 누르면 취소")
+    public BaseResponse<String> like(
+            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable Long posting_id,
+            @RequestHeader("Authorization")String accessToken) {
         try {
-            likeService.addLike(posting_id);
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+            String result = likeService.like(posting_id);
+            return new BaseResponse<>(result);
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
-    @DeleteMapping("/like")
-    @ApiResponses({
-            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다."),
-            @ApiResponse(code = 3051, message = "해당 좋아요가 존재하지 않습니다")
-    })
-    @ApiOperation(value = "좋아요 취소", notes = "해당 게시물에 좋아요 취소하기")
-    public BaseResponse<String> cancelLike(
-            @ApiParam(value = "게시물 ID", required = true, example = "1") @PathVariable Long posting_id) {
-        try {
-            likeService.cancelLike(posting_id);
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
-        }catch (BaseException exception){
-            return new BaseResponse<>(exception.getStatus());
-        }
-    }
-
 
     @GetMapping("/like")
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     @ApiOperation(value = "좋아요 개수", notes = "해당 게시물에 좋아요 개수 세기")
     public BaseResponse<String> countLike(
-            @ApiParam(value = "게시물 ID", required = true, example = "1") @PathVariable Long posting_id) {
+            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable Long posting_id,
+            @RequestHeader("Authorization")String accessToken) {
         try {
             String result = likeService.count(posting_id);
             return new BaseResponse<>(result);
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
-
     }
 }

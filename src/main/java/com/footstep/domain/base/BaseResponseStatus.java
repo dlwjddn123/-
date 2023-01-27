@@ -42,6 +42,7 @@ public enum BaseResponseStatus {
 
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
+    DUPLICATED_NICKNAME(false, 3017, "이미 존재하는 닉네임입니다."),
     NOT_FOUND_USERS_ID(false,3014,"없는 아이디입니다."),
     INVALID_PASSWORD(false, 3015, "비밀번호가 다릅니다."),
     EXPIRED_USERS(false, 3016, "탈퇴한 회원입니다."),

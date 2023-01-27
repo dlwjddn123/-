@@ -1,5 +1,6 @@
 package com.footstep.domain.users.dto.changeProfileInfo;
 
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.*;
 
@@ -10,6 +11,6 @@ import lombok.*;
 @Builder
 public class ChangeNicknameInfo {
 
-    @ApiParam(value = "변경할 닉네임", required = true, example = "닉변")
+    @ApiModelProperty(notes = "닉네임", example = "고양이")
     private String nickname;
 }

@@ -85,7 +85,7 @@ public class AuthService {
     public TokenDto reissue(String refreshToken) throws BaseException {
         refreshToken = resolveToken(refreshToken);
         String username = getCurrentUsername();
-        RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(username).orElseThrow(NoSuchElementException::new);
+        RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(username).orElseThrow(() -> new BaseException(INVALID_JWT));
 
         if (refreshToken.equals(redisRefreshToken.getRefreshToken())) {
             return reissueRefreshToken(refreshToken, username);

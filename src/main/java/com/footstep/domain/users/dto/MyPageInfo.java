@@ -1,5 +1,6 @@
 package com.footstep.domain.users.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @Getter
@@ -9,7 +10,12 @@ import lombok.*;
 @Builder
 public class MyPageInfo {
 
+    @ApiModelProperty(example = "하마")
     private String nickname;
 
+    @ApiModelProperty(example = "5")
     private int postingCount;
+
+    @ApiModelProperty(example = "url")
+    private String profileImageUrl;
 }

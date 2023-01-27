@@ -2,17 +2,15 @@ package com.footstep.domain.posting.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
-import com.footstep.domain.posting.dto.AllPlaceDto;
-import com.footstep.domain.posting.dto.CreatePlaceDto;
-import com.footstep.domain.posting.dto.PostingListResponseDto;
-import com.footstep.domain.posting.dto.SpecificPlaceDto;
-import com.footstep.domain.posting.repository.PlaceRepository;
+import com.footstep.domain.posting.dto.*;
 import com.footstep.domain.posting.service.PlaceService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(tags = "발자취 장소 API")
 @ApiResponses({
@@ -21,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
+@ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDY2MDA5MSwiZXhwIjoxNjc0OTYyNDkxfQ.W7MNMFI43SPbcw5pLhpbsuic0_nCDRcqHKPgEipV9ko")
+})
 public class PlaceController {
 
     private final PlaceService placeService;
@@ -36,7 +37,8 @@ public class PlaceController {
     })
     @GetMapping("/{place_id}")
     public BaseResponse<SpecificPlaceDto> viewSpecificPlace(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id) {
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
+            @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificPlace(place_id));
         } catch (BaseException exception) {
@@ -55,9 +57,31 @@ public class PlaceController {
     })
     @GetMapping("/{place_id}/list")
     public BaseResponse<PostingListResponseDto> viewSpecificPlaceList(
-            @ApiParam(value = "장소 ID", required = true, example = "1") @PathVariable("place_id") Long place_id) {
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
+            @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificPlaceList(place_id));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "검색 장소 지도 표시",
+            notes = "특정 위치의 위도와 경도를 이용해 현재 사용자가 해당 위치에 생성한 발자취에 대한 정보를 지도에 표시",
+            response = PlaceLocationDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
+            @ApiResponse(code = 3021, message = "없는 장소입니다."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
+    @GetMapping("/{latitude}/{longitude}")
+    public BaseResponse<PlaceLocationDto> viewPlaceLocation(
+            @ApiParam(value = "위도", required = true, example = "37.5776087830657") @PathVariable("latitude") Double latitude,
+            @ApiParam(value = "경도", required = true, example = "126.976896737645") @PathVariable("longitude") Double longitude,
+            @RequestHeader("Authorization")String accessToken) {
+        try {
+            return new BaseResponse<>(placeService.viewPlaceLocation(latitude, longitude));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -71,17 +95,11 @@ public class PlaceController {
             @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
     })
     @GetMapping("/all")
-    public BaseResponse<AllPlaceDto> viewAllPlace() {
+    public BaseResponse<List<AllPlaceDto>> viewAllPlace(@RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewAllPlace());
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
-    }
-
-    @PostMapping("/select-place")
-    public ResponseEntity createSelectedPlace(@RequestBody CreatePlaceDto createPlaceDto) {
-        placeService.createPlace(createPlaceDto);
-        return new ResponseEntity(HttpStatus.OK);
     }
 }

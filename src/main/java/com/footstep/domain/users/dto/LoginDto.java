@@ -11,9 +11,9 @@ import lombok.*;
 @Builder
 public class LoginDto {
 
-    @ApiModelProperty(example = "lee1234@naver.com")
+    @ApiModelProperty(example = "footstep@naver.com")
     private String email;
 
-    @ApiModelProperty(example = "leejw1234")
+    @ApiModelProperty(example = "footstep12")
     private String password;
 }

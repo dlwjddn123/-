@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,9 +48,8 @@ public class PlaceService {
     }
 
     public Optional<Place> getPlace(CreatePlaceDto createPlaceDto) {
-        Optional<Place> place = placeRepository
+        return placeRepository
                 .findByLatitudeAndLongitude(createPlaceDto.getLatitude(), createPlaceDto.getLongitude());
-        return place;
     }
 
     public SpecificPlaceDto viewSpecificPlace(Long placeId) throws BaseException {
@@ -57,7 +57,7 @@ public class PlaceService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
-        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByCreatedDateDesc(currentUsers, place);
+        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByRecordDateDesc(currentUsers, place);
         if (postings.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         return SpecificPlaceDto.builder()
@@ -72,7 +72,7 @@ public class PlaceService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
-        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByCreatedDateDesc(currentUsers, place);
+        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByRecordDateDesc(currentUsers, place);
         if (postings.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
@@ -85,7 +85,7 @@ public class PlaceService {
                     .imageUrl(posting.getImageUrl())
                     .title(posting.getTitle())
                     .likes((long) posting.getLikeList().size())
-                    .postings((long) Collections.frequency(dates, posting.getRecordDate()))
+                    .postingCount((long) Collections.frequency(dates, posting.getRecordDate()))
                     .postingId(posting.getId())
                     .build();
             postingListDto.add(dto);
@@ -93,14 +93,40 @@ public class PlaceService {
         return new PostingListResponseDto(postingListDto, (long) new HashSet<>(dates).stream().toList().size());
     }
 
-    public AllPlaceDto viewAllPlace() throws BaseException {
+    public PlaceLocationDto viewPlaceLocation(Double latitude, Double longitude) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        CreatePlaceDto placeDto = CreatePlaceDto.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+        Place place = getPlace(placeDto)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
+        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByRecordDateDesc(currentUsers, place);
+        if (postings.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+        return PlaceLocationDto.builder()
+                .placeId(place.getId())
+                .name(place.getName())
+                .imageUrl(postings.get(0).getImageUrl())
+                .postingCount(postings.size())
+                .build();
+    }
+
+    public List<AllPlaceDto> viewAllPlace() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         List<Posting> postings = postingRepository.findByUsers(currentUsers);
-        List<Long> placeIds = new ArrayList<>();
+        List<AllPlaceDto> allPlaceDto = new ArrayList<>();
         for (Posting posting : postings) {
-            placeIds.add(posting.getPlace().getId());
+            AllPlaceDto dto = AllPlaceDto.builder()
+                    .placeId(posting.getPlace().getId())
+                    .placeName(posting.getPlace().getName())
+                    .latitude(posting.getPlace().getLatitude())
+                    .longitude(posting.getPlace().getLongitude())
+                    .build();
+            allPlaceDto.add(dto);
         }
-        return new AllPlaceDto(new HashSet<>(placeIds).stream().toList());
+        return allPlaceDto;
     }
 }

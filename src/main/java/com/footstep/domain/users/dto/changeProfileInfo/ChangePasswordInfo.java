@@ -1,5 +1,6 @@
 package com.footstep.domain.users.dto.changeProfileInfo;
 
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.*;
 
@@ -10,9 +11,9 @@ import lombok.*;
 @Builder
 public class ChangePasswordInfo {
 
-    @ApiParam(value = "현재 비밀번호", required = true, example = "jungWoo1234!")
+    @ApiModelProperty(notes = "현재 비밀번호", example = "footstep12")
     private String currentPassword;
 
-    @ApiParam(value = "변경할 비밀번호", required = true, example = "jungWoo4321")
+    @ApiModelProperty(notes = "변경할 비밀번호", example = "footstep1234")
     private String changedPassword;
 }

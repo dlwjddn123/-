@@ -1,7 +1,9 @@
 package com.footstep.domain.posting.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+
 import java.sql.Date;
 
 @Getter
@@ -9,7 +11,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreatePostingDto {
+public class EditPostingDto {
 
     @ApiModelProperty(value = "발자취 제목", required = true, example = "고양이")
     private String title;
@@ -20,4 +22,5 @@ public class CreatePostingDto {
     private CreatePlaceDto createPlaceDto;
     @ApiModelProperty(value = "발자취 공개 여부", required = true, example = "1")
     private int visibilityStatusCode;
+    private String imageUrl;
 }
