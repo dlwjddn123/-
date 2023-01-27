@@ -106,18 +106,18 @@ public class PostingController {
     @ApiOperation(
             value = "발자취 게시물 상세조회",
             notes = "posting-id 넘어오면 해당 게시물 조회",
-            response = SpecificPosting.class)
+            response = SpecificPostingDto.class)
     @ApiResponses({
             @ApiResponse(code = 3021, message = "없는 장소입니다."),
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
     @ResponseBody
     @GetMapping("/posting/{posting-id}")
-    public BaseResponse<SpecificPosting> specificPosting(
+    public BaseResponse<SpecificPostingDto> specificPosting(
             @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id") Long posting_id,
             @RequestHeader("Authorization")String accessToken) {
         try {
-            SpecificPosting result = postingService.viewSpecificPosting(posting_id);
+            SpecificPostingDto result = postingService.viewSpecificPosting(posting_id);
             return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

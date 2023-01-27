@@ -142,7 +142,7 @@ public class PostingService {
         return new PostingListResponseDto(postingListDto, dates.stream().distinct().count());
     }
     @Transactional(readOnly = true)
-    public SpecificPosting viewSpecificPosting(Long postingId) throws BaseException {
+    public SpecificPostingDto viewSpecificPosting(Long postingId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Posting posting = postingRepository.findById(postingId)
@@ -157,7 +157,7 @@ public class PostingService {
 
 
         Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
-        return SpecificPosting.builder()
+        return SpecificPostingDto.builder()
                 .postingDate(postDate)
                 .postingName(posting.getTitle())
                 .content(posting.getContent())
