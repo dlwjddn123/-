@@ -5,6 +5,8 @@ import com.footstep.domain.base.Status;
 import com.footstep.domain.posting.domain.Comment;
 import com.footstep.domain.posting.domain.Likes;
 import com.footstep.domain.posting.domain.place.Place;
+import com.footstep.domain.posting.dto.CreatePostingDto;
+import com.footstep.domain.posting.dto.EditPostingDto;
 import com.footstep.domain.users.domain.Users;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +18,7 @@ import reactor.util.annotation.Nullable;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -65,5 +67,18 @@ public class Posting extends BaseTimeEntity {
         this.status = Status.NORMAL;
         this.users = users;
         this.place = place;
+    }
+
+    public void editPosting(CreatePostingDto createPostingDto, Place place, String imageUrl) {
+        this.title = createPostingDto.getTitle();
+        this.content = createPostingDto.getContent();
+        this.imageUrl = imageUrl;
+        this.recordDate = createPostingDto.getRecordDate();
+        this.visibilityStatus = VisibilityStatus.get(createPostingDto.getVisibilityStatusCode());
+        this.place = place;
+    }
+
+    public void removePosting() {
+        this.status = Status.EXPIRED;
     }
 }

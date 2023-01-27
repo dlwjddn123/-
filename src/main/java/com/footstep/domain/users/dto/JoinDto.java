@@ -1,7 +1,6 @@
 package com.footstep.domain.users.dto;
 
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import lombok.*;
 
 @Getter

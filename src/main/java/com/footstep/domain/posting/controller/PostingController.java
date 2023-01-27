@@ -21,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc0ODY5OTY0fQ.lobF3T2kLImKawBXnMjrNr5KCww9e74h5xLqblIFNtk")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDY2MDA5MSwiZXhwIjoxNjc0OTYyNDkxfQ.W7MNMFI43SPbcw5pLhpbsuic0_nCDRcqHKPgEipV9ko")
 })
 public class PostingController {
 
@@ -35,6 +35,51 @@ public class PostingController {
         try {
             postingService.uploadPosting(image, createPostingDto);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "발자취 수정",
+            notes = "발자취 수정 데이터 가져오기"
+    )
+    @GetMapping("/{posting-id}/edit")
+    public BaseResponse<EditPostingDto> getPosting(@RequestHeader("Authorization")String accessToken, @PathVariable("posting-id")Long postingId) {
+        try {
+            EditPostingDto postingInfo = postingService.getPostingInfo(postingId);
+            return new BaseResponse<>(postingInfo);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "발자취 수정",
+            notes = "발자취 수정하기"
+    )
+    @PostMapping("/{posting-id}/edit")
+    public BaseResponse<String> editPosting(@PathVariable("posting-id")Long postingId,
+                                                    @RequestHeader("Authorization")String accessToken,
+                                                    @ModelAttribute CreatePostingDto createPostingDto,
+                                                    @RequestPart MultipartFile image) throws IOException {
+        try {
+            postingService.editPosting(postingId, image, createPostingDto);
+            return new BaseResponse<>("수정 성공!");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "발자취 삭제",
+            notes = "발자취 삭제하기"
+    )
+    @PatchMapping("/{posting-id}/remove")
+    public BaseResponse<String> removePosting(@PathVariable("posting-id")Long postingId, @RequestHeader("Authorization")String accessToken) {
+        try {
+            postingService.removePosting(postingId);
+            return new BaseResponse<>("삭제 성공!");
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

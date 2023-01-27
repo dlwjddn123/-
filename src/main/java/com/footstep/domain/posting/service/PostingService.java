@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
+import java.sql.Date;
 import java.util.stream.Collectors;
 
 import static com.footstep.domain.base.BaseResponseStatus.*;
@@ -64,11 +66,62 @@ public class PostingService {
         postingRepository.save(posting);
     }
 
+    public EditPostingDto getPostingInfo(Long postingId) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        Posting posting = postingRepository.findById(postingId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_POSTING));
+        Place place = posting.getPlace();
+        CreatePlaceDto createPlaceDto = CreatePlaceDto.builder()
+                .address(place.getAddress())
+                .name(place.getName())
+                .latitude(place.getLatitude())
+                .longitude(place.getLongitude())
+                .build();
+        EditPostingDto editPostingDto = EditPostingDto.builder()
+                .createPlaceDto(createPlaceDto)
+                .title(posting.getTitle())
+                .content(posting.getContent())
+                .recordDate(posting.getRecordDate())
+                .visibilityStatusCode(posting.getVisibilityStatus().getCode())
+                .imageUrl(posting.getImageUrl())
+                .build();
+        return editPostingDto;
+    }
+
+    public void editPosting(Long postingId, MultipartFile image, CreatePostingDto createPostingDto) throws BaseException, IOException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        Posting posting = postingRepository.findById(postingId)
+            .orElseThrow(() -> new BaseException(NOT_FOUND_POSTING));
+        CreatePlaceDto createPlaceDto = createPostingDto.getCreatePlaceDto();
+        Optional<Place> place = placeService.getPlace(createPlaceDto);
+        Place createPlace;
+        String imageUrl = null;
+        if (!image.isEmpty()) {
+            imageUrl = s3UploadUtil.upload(image);
+        }
+        if (place.isEmpty())
+            createPlace = placeService.createPlace(createPlaceDto);
+        else
+            createPlace = place.get();
+        posting.editPosting(createPostingDto, createPlace, imageUrl);
+        postingRepository.save(posting);
+    }
+
+    public void removePosting(Long postingId) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        Posting posting = postingRepository.findById(postingId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_POSTING));
+        posting.removePosting();
+        postingRepository.save(posting);
+    }
 
     public PostingListResponseDto viewGallery() throws BaseException {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        List<Posting> postings = postingRepository.findAllByUsersOrderByRecordDateDesc(users);
+        List<Posting> postings = postingRepository.findByUsers(users);
         if (postings.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         List<PostingListDto> postingListDto = new ArrayList<>();
@@ -103,7 +156,7 @@ public class PostingService {
         Integer countComment = commentRepository.countByPosting(postingId);
 
 
-        Date postDate = java.sql.Timestamp.valueOf(posting.getCreatedDate());
+        Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
         return SpecificPosting.builder()
                 .postingDate(postDate)
                 .postingName(posting.getTitle())

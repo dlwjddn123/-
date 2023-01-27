@@ -43,7 +43,7 @@ public class AuthController {
             @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다.")
     })
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc3MTU5NTY0fQ.zhn4mePceDlROk3vJFUOQfhHxtsmS1vsthsBIEinSIk")
+            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDY2MDA5MSwiZXhwIjoxNjc0OTYyNDkxfQ.W7MNMFI43SPbcw5pLhpbsuic0_nCDRcqHKPgEipV9ko")
     })
     @PostMapping("/reissue")
     public BaseResponse<TokenDto> reissue(@RequestHeader("RefreshToken") String refreshToken) {
@@ -64,7 +64,7 @@ public class AuthController {
             @ApiResponse(code = 2006, message = "잘못된 접근입니다.")
     })
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc0ODY5OTY0fQ.lobF3T2kLImKawBXnMjrNr5KCww9e74h5xLqblIFNtk"),
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDY2MDA5MSwiZXhwIjoxNjc0OTYyNDkxfQ.W7MNMFI43SPbcw5pLhpbsuic0_nCDRcqHKPgEipV9ko"),
             @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDU2NzU2NCwiZXhwIjoxNjc3MTU5NTY0fQ.zhn4mePceDlROk3vJFUOQfhHxtsmS1vsthsBIEinSIk")
     })
     @PostMapping("/logout")
