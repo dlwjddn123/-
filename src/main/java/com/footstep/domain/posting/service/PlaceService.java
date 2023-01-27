@@ -62,8 +62,6 @@ public class PlaceService {
             throw new BaseException(NOT_FOUND_POSTING);
         return SpecificPlaceDto.builder()
                 .name(place.getName())
-                .latitude(place.getLatitude())
-                .longitude(place.getLongitude())
                 .imageUrl(postings.get(0).getImageUrl())
                 .postingCount(postings.size())
                 .build();
