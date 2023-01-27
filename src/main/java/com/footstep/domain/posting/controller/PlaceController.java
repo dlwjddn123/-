@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = "발자취 장소 API")
 @ApiResponses({
         @ApiResponse(code = 500, message = "Internal Server Error")
@@ -75,7 +77,7 @@ public class PlaceController {
             @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
     })
     @GetMapping("/all")
-    public BaseResponse<AllPlaceDto> viewAllPlace(@RequestHeader("Authorization")String accessToken) {
+    public BaseResponse<List<AllPlaceDto>> viewAllPlace(@RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewAllPlace());
         } catch (BaseException exception) {

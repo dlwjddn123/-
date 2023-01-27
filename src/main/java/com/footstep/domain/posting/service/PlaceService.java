@@ -61,6 +61,8 @@ public class PlaceService {
             throw new BaseException(NOT_FOUND_POSTING);
         return SpecificPlaceDto.builder()
                 .name(place.getName())
+                .latitude(place.getLatitude())
+                .longitude(place.getLongitude())
                 .imageUrl(postings.get(0).getImageUrl())
                 .postingCount(postings.size())
                 .build();
@@ -92,14 +94,20 @@ public class PlaceService {
         return new PostingListResponseDto(postingListDto, (long) new HashSet<>(dates).stream().toList().size());
     }
 
-    public AllPlaceDto viewAllPlace() throws BaseException {
+    public List<AllPlaceDto> viewAllPlace() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         List<Posting> postings = postingRepository.findByUsers(currentUsers);
-        List<Long> placeIds = new ArrayList<>();
+        List<AllPlaceDto> allPlaceDto = new ArrayList<>();
         for (Posting posting : postings) {
-            placeIds.add(posting.getPlace().getId());
+            AllPlaceDto dto = AllPlaceDto.builder()
+                    .placeId(posting.getPlace().getId())
+                    .placeName(posting.getPlace().getName())
+                    .latitude(posting.getPlace().getLatitude())
+                    .longitude(posting.getPlace().getLongitude())
+                    .build();
+            allPlaceDto.add(dto);
         }
-        return new AllPlaceDto(new HashSet<>(placeIds).stream().toList());
+        return allPlaceDto;
     }
 }
