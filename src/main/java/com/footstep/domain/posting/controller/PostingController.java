@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.footstep.domain.posting.service.PostingService;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.sql.Date;
 
 
 @Api(tags = "발자취 게시물 API")
@@ -102,6 +103,23 @@ public class PostingController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+    @ApiOperation(
+            value = "갤러리 발자취 캘린더 지정 조회",
+            notes = "현재 사용자가 지정한 날짜의 갤러리 발자취에 대해 리스트 형태로 조회",
+            response = PostingListResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
+    @GetMapping("/gallery/{date}")
+    public BaseResponse<GalleryListResponseDto> viewDesignatedGallery(@RequestHeader("Authorization")String accessToken, @PathVariable Date date) {
+        try {
+            GalleryListResponseDto result = postingService.viewDesignatedGallery(date);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
     @ApiOperation(
             value = "발자취 게시물 상세조회",
