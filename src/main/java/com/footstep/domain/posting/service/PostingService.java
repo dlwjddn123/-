@@ -141,6 +141,31 @@ public class PostingService {
         }
         return new PostingListResponseDto(postingListDto, dates.stream().distinct().count());
     }
+
+    public GalleryListResponseDto viewDesignatedGallery(Date date) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        List<Posting> postings = postingRepository.findByUsersAndRecordDate(users,date);
+        if (postings.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+        List<PostingListDto> postingListDto = new ArrayList<>();
+        List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
+
+        for (Posting posting : postings) {
+            PostingListDto dto = PostingListDto.builder()
+                    .placeName(posting.getPlace().getName())
+                    .recordDate(posting.getRecordDate())
+                    .imageUrl(posting.getImageUrl())
+                    .title(posting.getTitle())
+                    .likes((long) posting.getLikeList().size())
+                    .postingCount((long) Collections.frequency(dates, date))
+                    .postingId(posting.getId())
+                    .build();
+            postingListDto.add(dto);
+        }
+        return new GalleryListResponseDto(postingListDto);
+    }
+
     @Transactional(readOnly = true)
     public SpecificPostingDto viewSpecificPosting(Long postingId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())

@@ -57,7 +57,7 @@ public class UsersService {
 
     public void changeNickname(String nickname) throws BaseException {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        if (!usersRepository.findByNickname(users.getNickname()).isEmpty()) {
+        if (!usersRepository.findByNickname(nickname).isEmpty()) {
             throw new BaseException(DUPLICATED_NICKNAME);
         }
         users.changeNickname(nickname);
