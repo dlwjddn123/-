@@ -49,6 +49,7 @@ public enum BaseResponseStatus {
 
     // Place
     NOT_FOUND_PLACE(false, 3021, "없는 장소입니다."),
+    NOT_FOUND_CITY(false, 3022, "없는 도시입니다."),
 
     // Posting
     NOT_FOUND_POSTING(false, 3031, "게시글이 존재하지 않습니다."),

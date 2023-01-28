@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,6 +92,28 @@ public class PlaceService {
             postingListDto.add(dto);
         }
         return new PostingListResponseDto(postingListDto, (long) new HashSet<>(dates).stream().toList().size());
+    }
+
+    public List<AllPlaceDto> viewSpecificCity(String cityName) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        City city = City.getByName(cityName)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_CITY));
+        List<Posting> postings = postingRepository.findByUsers(currentUsers);
+
+        List<AllPlaceDto> allPlaceDto = new ArrayList<>();
+        for (Posting posting : postings) {
+            if (posting.getPlace().getCity() == city) {
+                AllPlaceDto dto = AllPlaceDto.builder()
+                        .placeId(posting.getPlace().getId())
+                        .placeName(posting.getPlace().getName())
+                        .latitude(posting.getPlace().getLatitude())
+                        .longitude(posting.getPlace().getLongitude())
+                        .build();
+                allPlaceDto.add(dto);
+            }
+        }
+        return allPlaceDto.stream().distinct().collect(Collectors.toList());
     }
 
     public PlaceLocationDto viewPlaceLocation(Double latitude, Double longitude) throws BaseException {
