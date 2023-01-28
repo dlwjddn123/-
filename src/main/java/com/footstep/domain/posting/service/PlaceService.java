@@ -150,6 +150,6 @@ public class PlaceService {
                     .build();
             allPlaceDto.add(dto);
         }
-        return allPlaceDto;
+        return allPlaceDto.stream().distinct().collect(Collectors.toList());
     }
 }
