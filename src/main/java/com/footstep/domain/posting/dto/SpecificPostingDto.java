@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SpecificPosting {
+public class SpecificPostingDto {
 
     @ApiModelProperty(notes = "발자취 게시일", example = "2022-08-10")
     @JsonFormat(pattern = "yyyy-MM-dd")

@@ -2,10 +2,7 @@ package com.footstep.domain.posting.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
-import com.footstep.domain.posting.dto.AllPlaceDto;
-import com.footstep.domain.posting.dto.CreatePlaceDto;
-import com.footstep.domain.posting.dto.PostingListResponseDto;
-import com.footstep.domain.posting.dto.SpecificPlaceDto;
+import com.footstep.domain.posting.dto.*;
 import com.footstep.domain.posting.service.PlaceService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +61,27 @@ public class PlaceController {
             @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificPlaceList(place_id));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "검색 장소 지도 표시",
+            notes = "특정 위치의 위도와 경도를 이용해 현재 사용자가 해당 위치에 생성한 발자취에 대한 정보를 지도에 표시",
+            response = PlaceLocationDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
+            @ApiResponse(code = 3021, message = "없는 장소입니다."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
+    @GetMapping("/{latitude}/{longitude}")
+    public BaseResponse<PlaceLocationDto> viewPlaceLocation(
+            @ApiParam(value = "위도", required = true, example = "37.5776087830657") @PathVariable("latitude") Double latitude,
+            @ApiParam(value = "경도", required = true, example = "126.976896737645") @PathVariable("longitude") Double longitude,
+            @RequestHeader("Authorization")String accessToken) {
+        try {
+            return new BaseResponse<>(placeService.viewPlaceLocation(latitude, longitude));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
