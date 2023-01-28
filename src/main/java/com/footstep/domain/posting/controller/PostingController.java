@@ -141,4 +141,17 @@ public class PostingController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    @ApiOperation(
+            value = "[특정 기간 조회] 지도에 발자취 표시",
+            notes = "조회 기간 설정 후 조회된 발자취 리스트 조회",
+            response = AllPlaceDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
+    })
+    @GetMapping("/{start-date}/{end-date}")
+    public BaseResponse<AllPlaceDto> specificDatePosting(
+            @ApiParam(value = "조회 시작 날짜", required = true, example = "2022-10-10") @PathVariable("start-date") Double latitude,
+            @ApiParam(value = "조회 끝 날짜", required = true, example = "2022-10-11") @PathVariable("end-date") Double longitude,
+    )
 }

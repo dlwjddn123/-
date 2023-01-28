@@ -24,4 +24,6 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
     List<Posting> findByUsersAndRecordDate(@Param("users") Users users, @Param("date") Date date);
 
     Optional<Posting> findById(Long postingId);
+
+    @Query("SELECT p FROM Posting p WHERE p.recordDate = :start_date ")
 }
