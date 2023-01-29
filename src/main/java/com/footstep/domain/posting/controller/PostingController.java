@@ -111,9 +111,9 @@ public class PostingController {
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
     @GetMapping("/gallery/{date}")
-    public BaseResponse<GalleryListResponseDto> viewDesignatedGallery(@RequestHeader("Authorization")String accessToken, @PathVariable Date date) {
+    public BaseResponse<DesignatedPostingDto> viewDesignatedGallery(@RequestHeader("Authorization")String accessToken, @PathVariable Date date) {
         try {
-            GalleryListResponseDto result = postingService.viewDesignatedGallery(date);
+            DesignatedPostingDto result = postingService.viewDesignatedGallery(date);
             return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

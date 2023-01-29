@@ -142,7 +142,7 @@ public class PostingService {
         return new PostingListResponseDto(postingListDto, dates.stream().distinct().count());
     }
 
-    public GalleryListResponseDto viewDesignatedGallery(Date date) throws BaseException {
+    public DesignatedPostingDto viewDesignatedGallery(Date date) throws BaseException {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         List<Posting> postings = postingRepository.findByUsersAndRecordDate(users,date);
@@ -163,7 +163,7 @@ public class PostingService {
                     .build();
             postingListDto.add(dto);
         }
-        return new GalleryListResponseDto(postingListDto);
+        return new DesignatedPostingDto(postingListDto);
     }
 
     @Transactional(readOnly = true)
