@@ -9,6 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GalleryListResponseDto {
+public class DesignatedPostingDto {
     private List<PostingListDto> postingListDto;
 }
