@@ -30,7 +30,7 @@ public class LikeService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Posting posting = postingRepository.findById(postingId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_POSTING));
-        Optional<Likes> isLike = likeRepository.findByUsers(currentUsers);
+        Optional<Likes> isLike = likeRepository.findByUsersAndPosting(currentUsers, posting);
         if (!isLike.isEmpty()) {
             likeRepository.delete(isLike.get());
             return "좋아요를 취소하였습니다.";

@@ -48,9 +48,8 @@ public class PlaceService {
     }
 
     public Optional<Place> getPlace(CreatePlaceDto createPlaceDto) {
-        Optional<Place> place = placeRepository
+        return placeRepository
                 .findByLatitudeAndLongitude(createPlaceDto.getLatitude(), createPlaceDto.getLongitude());
-        return place;
     }
 
     public SpecificPlaceDto viewSpecificPlace(Long placeId) throws BaseException {
@@ -94,14 +93,66 @@ public class PlaceService {
         return new PostingListResponseDto(postingListDto, (long) new HashSet<>(dates).stream().toList().size());
     }
 
-    public AllPlaceDto viewAllPlace() throws BaseException {
+    public PlaceLocationDto viewPlaceLocation(Double latitude, Double longitude) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        CreatePlaceDto placeDto = CreatePlaceDto.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+        Place place = getPlace(placeDto)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
+        List<Posting> postings = postingRepository.findByUsersAndPlaceOrderByRecordDateDesc(currentUsers, place);
+        if (postings.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+        return PlaceLocationDto.builder()
+                .placeId(place.getId())
+                .name(place.getName())
+                .imageUrl(postings.get(0).getImageUrl())
+                .postingCount(postings.size())
+                .build();
+    }
+
+    public List<AllPlaceDto> viewAllPlace() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         List<Posting> postings = postingRepository.findByUsers(currentUsers);
-        List<Long> placeIds = new ArrayList<>();
+        List<AllPlaceDto> allPlaceDto = new ArrayList<>();
         for (Posting posting : postings) {
-            placeIds.add(posting.getPlace().getId());
+            AllPlaceDto dto = AllPlaceDto.builder()
+                    .placeId(posting.getPlace().getId())
+                    .placeName(posting.getPlace().getName())
+                    .latitude(posting.getPlace().getLatitude())
+                    .longitude(posting.getPlace().getLongitude())
+                    .build();
+            allPlaceDto.add(dto);
         }
-        return new AllPlaceDto(new HashSet<>(placeIds).stream().toList());
+        return allPlaceDto;
+    }
+
+    public DesignatedPostingDto viewSpecificPlaceDateList(Long placeId, Date date) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
+        List<Posting> postings = postingRepository.findByUsersAndRecordDateAndPlace(currentUsers, place, date);
+        if (postings.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+        List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
+        List<PostingListDto> postingListDto = new ArrayList<>();
+
+        for (Posting posting : postings) {
+            PostingListDto dto = PostingListDto.builder()
+                    .placeName(place.getName())
+                    .recordDate(posting.getRecordDate())
+                    .imageUrl(posting.getImageUrl())
+                    .title(posting.getTitle())
+                    .likes((long) posting.getLikeList().size())
+                    .postingCount((long) Collections.frequency(dates, date))
+                    .postingId(posting.getId())
+                    .build();
+            postingListDto.add(dto);
+        }
+        return new DesignatedPostingDto(postingListDto);
     }
 }

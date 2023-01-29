@@ -167,8 +167,32 @@ public class PostingService {
         return new FeedListResponseDto(feedListDto, (long) feedListDto.size());
     }
 
+    public DesignatedPostingDto viewDesignatedGallery(Date date) throws BaseException {
+        Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        List<Posting> postings = postingRepository.findByUsersAndRecordDate(users,date);
+        if (postings.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+        List<PostingListDto> postingListDto = new ArrayList<>();
+        List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
+
+        for (Posting posting : postings) {
+            PostingListDto dto = PostingListDto.builder()
+                    .placeName(posting.getPlace().getName())
+                    .recordDate(posting.getRecordDate())
+                    .imageUrl(posting.getImageUrl())
+                    .title(posting.getTitle())
+                    .likes((long) posting.getLikeList().size())
+                    .postingCount((long) Collections.frequency(dates, date))
+                    .postingId(posting.getId())
+                    .build();
+            postingListDto.add(dto);
+        }
+        return new DesignatedPostingDto(postingListDto);
+    }
+
     @Transactional(readOnly = true)
-    public SpecificPosting viewSpecificPosting(Long postingId) throws BaseException {
+    public SpecificPostingDto viewSpecificPosting(Long postingId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Posting posting = postingRepository.findById(postingId)
@@ -177,13 +201,9 @@ public class PostingService {
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
         Integer likeCount = likeRepository.countByPosting(posting).orElse(0);
         List<Comment> comment = commentRepository.findByPosting(posting);
-
-
         Integer countComment = commentRepository.countByPosting(postingId);
-
-
         Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
-        return SpecificPosting.builder()
+        return SpecificPostingDto.builder()
                 .postingDate(postDate)
                 .postingName(posting.getTitle())
                 .content(posting.getContent())
