@@ -141,6 +141,32 @@ public class PostingService {
         }
         return new PostingListResponseDto(postingListDto, dates.stream().distinct().count());
     }
+
+    public FeedListResponseDto viewFeed() throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        List<Posting> feeds = postingRepository.findAllFeed(currentUsers);
+        if (feeds.isEmpty()){
+            throw new BaseException(NOT_FOUND_POSTING);
+        }
+        List<FeedListDto> feedListDto = new ArrayList<>();
+
+        for (Posting feed : feeds) {
+            FeedListDto dto = FeedListDto.builder()
+                    .postingId(feed.getId())
+                    .imageUrl(feed.getImageUrl())
+                    .title(feed.getTitle())
+                    .content(feed.getContent())
+                    .likes((long) feed.getLikeList().size())
+                    .commentCount((long) feed.getComments().size())
+                    .placeName(feed.getPlace().getName())
+                    .recordDate(feed.getRecordDate())
+                    .build();
+            feedListDto.add(dto);
+        }
+        return new FeedListResponseDto(feedListDto, (long) feedListDto.size());
+    }
+
     @Transactional(readOnly = true)
     public SpecificPosting viewSpecificPosting(Long postingId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())

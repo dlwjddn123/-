@@ -123,4 +123,21 @@ public class PostingController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    @ApiOperation(
+            value = "유저 피드 리스트 조회",
+            notes = "현재 사용자를 제외한 모든 유저에 대한 게시글을 리스트 형태로 조회",
+            response = FeedListResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
+    @GetMapping("/feed")
+    public BaseResponse<FeedListResponseDto> viewFeed(@RequestHeader("Authorization")String accessToken) {
+        try {
+            FeedListResponseDto result = postingService.viewFeed();
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }
