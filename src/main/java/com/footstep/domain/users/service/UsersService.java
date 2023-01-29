@@ -1,6 +1,9 @@
 package com.footstep.domain.users.service;
 
 import com.footstep.domain.base.BaseException;
+import com.footstep.domain.posting.domain.posting.Posting;
+import com.footstep.domain.posting.repository.PostingRepository;
+import com.footstep.domain.posting.service.PostingService;
 import com.footstep.domain.users.domain.Users;
 import com.footstep.domain.users.dto.JoinDto;
 import com.footstep.domain.users.dto.changeProfileInfo.ChangePasswordInfo;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.footstep.domain.base.BaseResponseStatus.*;
 
@@ -28,6 +32,8 @@ public class UsersService {
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
     private final S3UploadUtil s3UploadUtil;
+    private final PostingRepository postingRepository;
+    private final PostingService postingService;
 
     public void join(JoinDto joinDto) throws BaseException {
         joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
@@ -57,7 +63,7 @@ public class UsersService {
 
     public void changeNickname(String nickname) throws BaseException {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        if (!usersRepository.findByNickname(users.getNickname()).isEmpty()) {
+        if (!usersRepository.findByNickname(nickname).isEmpty()) {
             throw new BaseException(DUPLICATED_NICKNAME);
         }
         users.changeNickname(nickname);
@@ -75,6 +81,10 @@ public class UsersService {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         users.secession();
         authService.logout(tokenDto, users.getEmail());
+        List<Posting> postings = postingRepository.findByUsers(users);
+        for (Posting posting : postings) {
+            postingService.removePosting(posting.getId());
+        }
         usersRepository.save(users);
     }
 }
