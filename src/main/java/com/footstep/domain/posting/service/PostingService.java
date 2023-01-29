@@ -217,4 +217,27 @@ public class PostingService {
                 .commentNum(Integer.toString(countComment))
                 .build();
     }
+
+    public SpecificDateResponseDto viewSpecificDatePosting(Date startDate, Date endDate) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        List<Posting> postings = postingRepository.findByStartDateAndEndDate(startDate, endDate);
+        if (postings.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+
+        List<AllPlaceDto> postingListDto = new ArrayList<>();
+
+
+        for (Posting posting : postings) {
+            AllPlaceDto dto = AllPlaceDto.builder()
+                    .placeId(posting.getPlace().getId())
+                    .placeName(posting.getPlace().getName())
+                    .latitude(posting.getPlace().getLatitude())
+                    .longitude(posting.getPlace().getLongitude())
+                    .build();
+            postingListDto.add(dto);
+
+        }
+        return new SpecificDateResponseDto(postingListDto);
+    }
 }
