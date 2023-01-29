@@ -142,6 +142,26 @@ public class PostingController {
     }
 
     @ApiOperation(
+            value = "[특정 기간 조회] 지도에 발자취 표시",
+            notes = "조회 기간 설정 후 조회된 발자취 리스트 조회",
+            response = AllPlaceDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
+    @GetMapping("/specific/{start-date}/{end-date}")
+    public BaseResponse<SpecificDateResponseDto> specificDatePosting(
+            @ApiParam(value = "조회 시작 날짜", required = true, example = "2022-10-10") @PathVariable("start-date") Date startDate,
+            @ApiParam(value = "조회 끝 날짜", required = true, example = "2022-10-11") @PathVariable("end-date") Date endDate,
+            @RequestHeader("Authorization")String accessToken) {
+        try {
+            SpecificDateResponseDto result = postingService.viewSpecificDatePosting(startDate, endDate);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
             value = "유저 피드 리스트 조회",
             notes = "현재 사용자를 제외한 모든 유저에 대한 게시글을 리스트 형태로 조회",
             response = FeedListResponseDto.class)
@@ -157,4 +177,5 @@ public class PostingController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
 }

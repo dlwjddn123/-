@@ -178,4 +178,21 @@ public class PlaceService {
         }
         return new DesignatedPostingDto(postingListDto);
     }
+
+    public List<AllPlaceDto> specificDatePosting() throws BaseException{
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        List<Posting> postings = postingRepository.findByUsers(currentUsers);
+        List<AllPlaceDto> allPlaceDto = new ArrayList<>();
+        for (Posting posting : postings) {
+            AllPlaceDto dto = AllPlaceDto.builder()
+                    .placeId(posting.getPlace().getId())
+                    .placeName(posting.getPlace().getName())
+                    .latitude(posting.getPlace().getLatitude())
+                    .longitude(posting.getPlace().getLongitude())
+                    .build();
+            allPlaceDto.add(dto);
+        }
+        return allPlaceDto;
+    }
 }
