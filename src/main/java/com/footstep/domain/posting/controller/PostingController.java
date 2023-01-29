@@ -147,11 +147,19 @@ public class PostingController {
             notes = "조회 기간 설정 후 조회된 발자취 리스트 조회",
             response = AllPlaceDto.class)
     @ApiResponses({
-            @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
-    @GetMapping("/{start-date}/{end-date}")
-    public BaseResponse<AllPlaceDto> specificDatePosting(
-            @ApiParam(value = "조회 시작 날짜", required = true, example = "2022-10-10") @PathVariable("start-date") Double latitude,
-            @ApiParam(value = "조회 끝 날짜", required = true, example = "2022-10-11") @PathVariable("end-date") Double longitude,
-    )
+    @GetMapping("/specific/{start-date}/{end-date}")
+    public BaseResponse<SpecificDateResponseDto> specificDatePosting(
+            @ApiParam(value = "조회 시작 날짜", required = true, example = "2022-10-10") @PathVariable("start-date") Date startDate,
+            @ApiParam(value = "조회 끝 날짜", required = true, example = "2022-10-11") @PathVariable("end-date") Date endDate,
+            @RequestHeader("Authorization")String accessToken) {
+        try {
+            SpecificDateResponseDto result = postingService.viewSpecificDatePosting(startDate, endDate);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 }
