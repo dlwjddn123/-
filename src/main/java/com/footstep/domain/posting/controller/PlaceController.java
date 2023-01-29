@@ -2,14 +2,16 @@ package com.footstep.domain.posting.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
+import com.footstep.domain.posting.dto.AllPlaceDto;
+import com.footstep.domain.posting.dto.PostingListResponseDto;
+import com.footstep.domain.posting.dto.SpecificPlaceDto;
 import com.footstep.domain.posting.dto.*;
 import com.footstep.domain.posting.service.PlaceService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Api(tags = "발자취 장소 API")
@@ -98,6 +100,27 @@ public class PlaceController {
     public BaseResponse<List<AllPlaceDto>> viewAllPlace(@RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewAllPlace());
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "특정 위치의 발자취 장소(팝업) 클릭 후 지정 날짜 게시물 리스트 조회",
+            notes = "특정 위치 ID를 이용해 현재 사용자가 해당 위치, 해당 날짜에 생성한 발자취에 대해 리스트 형태로 조회",
+            response = DesignatedPostingDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
+            @ApiResponse(code = 3021, message = "없는 장소입니다."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
+    @GetMapping("/{place_id}/{date}/list")
+    public BaseResponse<DesignatedPostingDto> viewSpecificPlaceDateList(
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
+            @ApiParam(value = "선택 날짜", required = true, example = "2023-01-23") @PathVariable("date") Date date,
+            @RequestHeader("Authorization")String accessToken) {
+        try {
+            return new BaseResponse<>(placeService.viewSpecificPlaceDateList(place_id, date));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

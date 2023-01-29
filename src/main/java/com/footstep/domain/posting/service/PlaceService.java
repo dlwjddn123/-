@@ -129,4 +129,30 @@ public class PlaceService {
         }
         return allPlaceDto;
     }
+
+    public DesignatedPostingDto viewSpecificPlaceDateList(Long placeId, Date date) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
+        List<Posting> postings = postingRepository.findByUsersAndRecordDateAndPlace(currentUsers, place, date);
+        if (postings.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+        List<Date> dates = postings.stream().map(Posting::getRecordDate).toList();
+        List<PostingListDto> postingListDto = new ArrayList<>();
+
+        for (Posting posting : postings) {
+            PostingListDto dto = PostingListDto.builder()
+                    .placeName(place.getName())
+                    .recordDate(posting.getRecordDate())
+                    .imageUrl(posting.getImageUrl())
+                    .title(posting.getTitle())
+                    .likes((long) posting.getLikeList().size())
+                    .postingCount((long) Collections.frequency(dates, date))
+                    .postingId(posting.getId())
+                    .build();
+            postingListDto.add(dto);
+        }
+        return new DesignatedPostingDto(postingListDto);
+    }
 }

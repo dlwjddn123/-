@@ -2,7 +2,6 @@ package com.footstep.domain.posting.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,5 +17,4 @@ public class AllPlaceDto {
     private Double latitude;
     @ApiModelProperty(notes = "경도", example = "126.976896737645")
     private Double longitude;
-
 }
