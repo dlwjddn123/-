@@ -236,8 +236,7 @@ public class PostingService {
                     .longitude(posting.getPlace().getLongitude())
                     .build();
             postingListDto.add(dto);
-
         }
-        return new SpecificDateResponseDto(postingListDto);
+        return new SpecificDateResponseDto(postingListDto.stream().distinct().collect(Collectors.toList()));
     }
 }
