@@ -1,8 +1,13 @@
 package com.footstep.domain.users.service;
 
 import com.footstep.domain.base.BaseException;
+import com.footstep.domain.posting.domain.Comment;
+import com.footstep.domain.posting.domain.Likes;
 import com.footstep.domain.posting.domain.posting.Posting;
+import com.footstep.domain.posting.repository.CommentRepository;
+import com.footstep.domain.posting.repository.LikeRepository;
 import com.footstep.domain.posting.repository.PostingRepository;
+import com.footstep.domain.posting.service.CommentService;
 import com.footstep.domain.posting.service.PostingService;
 import com.footstep.domain.users.domain.Users;
 import com.footstep.domain.users.dto.JoinDto;
@@ -34,6 +39,8 @@ public class UsersService {
     private final S3UploadUtil s3UploadUtil;
     private final PostingRepository postingRepository;
     private final PostingService postingService;
+    private final CommentService commentService;
+    private final LikeRepository likeRepository;
 
     public void join(JoinDto joinDto) throws BaseException {
         joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
@@ -84,6 +91,12 @@ public class UsersService {
         List<Posting> postings = postingRepository.findByUsers(users);
         for (Posting posting : postings) {
             postingService.removePosting(posting.getId());
+        }
+        for (Comment comment : users.getComments()) {
+            commentService.deleteComment(comment.getId());
+        }
+        for (Likes like : users.getLikes()) {
+            likeRepository.delete(like);
         }
         usersRepository.save(users);
     }
