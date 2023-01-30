@@ -131,10 +131,10 @@ public class PostingController {
     @ResponseBody
     @GetMapping("/posting/{posting-id}")
     public BaseResponse<SpecificPostingDto> specificPosting(
-            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id") Long posting_id,
+            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id")Long postingId,
             @RequestHeader("Authorization")String accessToken) {
         try {
-            SpecificPostingDto result = postingService.viewSpecificPosting(posting_id);
+            SpecificPostingDto result = postingService.viewSpecificPosting(postingId);
             return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

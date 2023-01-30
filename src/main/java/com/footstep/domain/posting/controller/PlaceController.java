@@ -37,12 +37,12 @@ public class PlaceController {
             @ApiResponse(code = 3021, message = "없는 장소입니다."),
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
-    @GetMapping("/{place_id}")
+    @GetMapping("/{place-id}")
     public BaseResponse<SpecificPlaceDto> viewSpecificPlace(
-            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place-id") Long placeId,
             @RequestHeader("Authorization")String accessToken) {
         try {
-            return new BaseResponse<>(placeService.viewSpecificPlace(place_id));
+            return new BaseResponse<>(placeService.viewSpecificPlace(placeId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -57,12 +57,12 @@ public class PlaceController {
             @ApiResponse(code = 3021, message = "없는 장소입니다."),
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
-    @GetMapping("/{place_id}/list")
+    @GetMapping("/{place-id}/list")
     public BaseResponse<PostingListResponseDto> viewSpecificPlaceList(
-            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place-id") Long placeId,
             @RequestHeader("Authorization")String accessToken) {
         try {
-            return new BaseResponse<>(placeService.viewSpecificPlaceList(place_id));
+            return new BaseResponse<>(placeService.viewSpecificPlaceList(placeId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -76,9 +76,9 @@ public class PlaceController {
             @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
             @ApiResponse(code = 3022, message = "없는 도시입니다.")
     })
-    @GetMapping("/city/{city_name}")
+    @GetMapping("/city/{city-name}")
     public BaseResponse<List<AllPlaceDto>> viewSpecificCity(
-            @ApiParam(value = "도시명", required = true, example = "서울") @PathVariable("city_name") String cityName,
+            @ApiParam(value = "도시명", required = true, example = "서울") @PathVariable("city-name") String cityName,
             @RequestHeader("Authorization")String accessToken) {
         try {
             return new BaseResponse<>(placeService.viewSpecificCity(cityName));
@@ -133,13 +133,13 @@ public class PlaceController {
             @ApiResponse(code = 3021, message = "없는 장소입니다."),
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
-    @GetMapping("/{place_id}/{date}/list")
+    @GetMapping("/{place-id}/{date}/list")
     public BaseResponse<DesignatedPostingDto> viewSpecificPlaceDateList(
-            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place_id") Long place_id,
+            @ApiParam(value = "장소 ID", required = true, example = "2") @PathVariable("place-id") Long placeId,
             @ApiParam(value = "선택 날짜", required = true, example = "2023-01-23") @PathVariable("date") Date date,
             @RequestHeader("Authorization")String accessToken) {
         try {
-            return new BaseResponse<>(placeService.viewSpecificPlaceDateList(place_id, date));
+            return new BaseResponse<>(placeService.viewSpecificPlaceDateList(placeId, date));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

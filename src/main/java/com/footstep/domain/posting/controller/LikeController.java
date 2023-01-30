@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"좋아요 API"})
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/footstep/{posting_id}")
+@RequestMapping("/footstep/{posting-id}")
 @ApiImplicitParams({
         @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDkxNDc2NiwiZXhwIjoxNjc1MjE3MTY2fQ.KxwX1Q0o-omU1rRIiUJBd9gLPbTRVciP_9g_sklW1Bk")
 })
@@ -26,10 +26,10 @@ public class LikeController {
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
     @ApiOperation(value = "좋아요 누르기", notes = "해당 게시물에 좋아요를 누름, 눌려있는 상태에서 좋아요를 누르면 취소")
     public BaseResponse<String> like(
-            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable Long posting_id,
+            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id")Long postingId,
             @RequestHeader("Authorization")String accessToken) {
         try {
-            String result = likeService.like(posting_id);
+            String result = likeService.like(postingId);
             return new BaseResponse<>(result);
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
@@ -40,10 +40,10 @@ public class LikeController {
     @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     @ApiOperation(value = "좋아요 개수", notes = "해당 게시물에 좋아요 개수 세기")
     public BaseResponse<String> countLike(
-            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable Long posting_id,
+            @ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id")Long postingId,
             @RequestHeader("Authorization")String accessToken) {
         try {
-            String result = likeService.count(posting_id);
+            String result = likeService.count(postingId);
             return new BaseResponse<>(result);
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
