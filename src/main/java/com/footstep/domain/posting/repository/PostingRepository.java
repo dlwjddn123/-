@@ -6,6 +6,7 @@ import com.footstep.domain.users.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.sql.Date;
 import java.util.List;
@@ -20,7 +21,8 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
     @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users ORDER BY p.recordDate DESC")
     List<Posting> findByUsers(@Param("users") Users users);
 
-    @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users != :users ORDER BY p.recordDate DESC")
+    @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users != :users AND p.visibilityStatus = 'PUBLIC' " +
+            "ORDER BY p.recordDate DESC")
     List<Posting> findAllFeed(@Param("users") Users users);
 
     @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users AND p.recordDate = :date")
@@ -30,4 +32,7 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
     List<Posting> findByUsersAndRecordDateAndPlace(@Param("users") Users users,@Param("place") Place place ,@Param("date") Date date);
 
     Optional<Posting> findById(Long postingId);
+
+    @Query("SELECT p FROM Posting p WHERE p.recordDate between :startDate AND :endDate")
+    List<Posting> findByStartDateAndEndDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

@@ -69,6 +69,25 @@ public class PlaceController {
     }
 
     @ApiOperation(
+            value = "도시 설정 후 지도에 발자취 표시",
+            notes = "특정 위치 ID를 이용해 현재 사용자가 해당 위치에 생성한 발자취에 대해 리스트 형태로 조회",
+            response = AllPlaceDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
+            @ApiResponse(code = 3022, message = "없는 도시입니다.")
+    })
+    @GetMapping("/city/{city_name}")
+    public BaseResponse<List<AllPlaceDto>> viewSpecificCity(
+            @ApiParam(value = "도시명", required = true, example = "서울") @PathVariable("city_name") String cityName,
+            @RequestHeader("Authorization")String accessToken) {
+        try {
+            return new BaseResponse<>(placeService.viewSpecificCity(cityName));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
             value = "검색 장소 지도 표시",
             notes = "특정 위치의 위도와 경도를 이용해 현재 사용자가 해당 위치에 생성한 발자취에 대한 정보를 지도에 표시",
             response = PlaceLocationDto.class)
