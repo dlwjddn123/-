@@ -16,6 +16,10 @@ public class FeedListDto {
 
     @ApiModelProperty(notes = "게시글 인덱스", example = "3")
     private Long postingId;
+    @ApiModelProperty(notes = "유저 인덱스", example = "1")
+    private Long usersId;
+    @ApiModelProperty(notes = "유저 닉네임", example = "하마")
+    private String nickname;
     @ApiModelProperty(notes = "게시글 사진", example = "http://news.samsungdisplay.com/wp-content/uploads/2018/08/1.png")
     private String imageUrl;
     @ApiModelProperty(notes = "게시글 제목", example = "제목예시")

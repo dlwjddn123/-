@@ -154,6 +154,8 @@ public class PostingService {
         for (Posting feed : feeds) {
             FeedListDto dto = FeedListDto.builder()
                     .postingId(feed.getId())
+                    .usersId(feed.getUsers().getId())
+                    .nickname(feed.getUsers().getNickname())
                     .imageUrl(feed.getImageUrl())
                     .title(feed.getTitle())
                     .content(feed.getContent())
