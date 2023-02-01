@@ -54,6 +54,10 @@ public class UsersService {
         usersRepository.save(Users.ofUser(joinDto));
     }
 
+    public void emailValid() throws BaseException{
+        throw new BaseException(POST_USERS_INVALID_EMAIL);
+    }
+
     public MyPageInfo getMyPage() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         return new MyPageInfo(currentUsers.getNickname(), currentUsers.getPostings().size(), currentUsers.getProfileImageUrl());
