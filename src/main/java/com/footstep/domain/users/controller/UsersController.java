@@ -10,9 +10,12 @@ import com.footstep.domain.users.dto.TokenDto;
 import com.footstep.domain.users.service.UsersService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Api(tags = {"회원 정보 API"})
@@ -28,11 +31,15 @@ public class UsersController {
     @ApiOperation(value = "회원 가입")
     @ApiResponses({
             @ApiResponse(code = 3013, message = "중복된 이메일입니다."),
-            @ApiResponse(code = 3017, message = "이미 존재하는 닉네임입니다.")
+            @ApiResponse(code = 3017, message = "이미 존재하는 닉네임입니다."),
+            @ApiResponse(code = 2016, message = "이메일 형식을 확인해주세요.")
     })
     @PostMapping("/join")
-    public BaseResponse<String> join(@RequestBody JoinDto joinDto) {
+    public BaseResponse<String> join(@Valid @RequestBody JoinDto joinDto, BindingResult bindingResult) {
         try {
+            if(bindingResult.hasErrors()){
+                usersService.emailValid();
+            }
             usersService.join(joinDto);
             return new BaseResponse<>("회원 가입이 완료되었습니다.");
         } catch (BaseException exception) {
