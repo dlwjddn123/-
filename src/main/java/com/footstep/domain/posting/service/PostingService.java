@@ -1,6 +1,7 @@
 package com.footstep.domain.posting.service;
 
 import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.Status;
 import com.footstep.domain.posting.domain.Comment;
 import com.footstep.domain.posting.domain.place.Place;
 import com.footstep.domain.posting.domain.posting.Posting;
@@ -160,7 +161,7 @@ public class PostingService {
                     .title(feed.getTitle())
                     .content(feed.getContent())
                     .likes((long) feed.getLikeList().size())
-                    .commentCount((long) feed.getComments().size())
+                    .commentCount(feed.getComments().stream().filter(c -> c.getStatus() == Status.NORMAL).count())
                     .placeName(feed.getPlace().getName())
                     .recordDate(feed.getRecordDate())
                     .build();
