@@ -174,7 +174,7 @@ public class PostingService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Users targetUsers = usersRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(REQUEST_ERROR));
-        List<Posting> feeds = postingRepository.findAllFeed(targetUsers);
+        List<Posting> feeds = postingRepository.findSpecificFeed(targetUsers);
         if (feeds.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         List<PostingListDto> postingListDto = new ArrayList<>();
