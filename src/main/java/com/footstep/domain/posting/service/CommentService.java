@@ -50,4 +50,10 @@ public class CommentService {
         String result = String.valueOf(commentCount);
         return result;
     }
+
+    public void isValid(String field) throws BaseException{
+        switch (field) {
+            case "content" -> throw new BaseException(COMMENT_EMPTY_CONTENT);
+        }
+    }
 }

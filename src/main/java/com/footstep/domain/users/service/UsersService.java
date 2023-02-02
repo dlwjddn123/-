@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static com.footstep.domain.base.BaseResponseStatus.*;
 
@@ -54,10 +55,6 @@ public class UsersService {
         usersRepository.save(Users.ofUser(joinDto));
     }
 
-    public void emailValid() throws BaseException{
-        throw new BaseException(POST_USERS_INVALID_EMAIL);
-    }
-
     public MyPageInfo getMyPage() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         return new MyPageInfo(currentUsers.getNickname(), currentUsers.getPostings().size(), currentUsers.getProfileImageUrl());
@@ -67,6 +64,9 @@ public class UsersService {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail()).orElseThrow(() -> new BaseException(UNAUTHORIZED));
         if (!passwordEncoder.matches(changePasswordInfo.getCurrentPassword(), users.getPassword())) {
             throw new BaseException(INVALID_PASSWORD);
+        }
+        if (Objects.equals(changePasswordInfo.getCurrentPassword(), changePasswordInfo.getChangedPassword())) {
+            throw new BaseException(DUPLICATED_PASSWORD);
         }
         users.changePassword(passwordEncoder.encode(changePasswordInfo.getChangedPassword()));
         usersRepository.save(users);
@@ -104,4 +104,15 @@ public class UsersService {
         }
         usersRepository.save(users);
     }
+
+    public void isValid(String field) throws BaseException{
+        switch (field) {
+            case "email" -> throw new BaseException(POST_USERS_INVALID_EMAIL);
+            case "password" -> throw new BaseException(POST_USERS_EMPTY_PASSWORD);
+            case "nickname" -> throw new BaseException(POST_USERS_EMPTY_NICKNAME);
+            case "currentPassword" -> throw new BaseException(PATCH_USERS_EMPTY_CURRENT_PASSWORD);
+            case "changedPassword" -> throw new BaseException(PATCH_USERS_EMPTY_CHANGED_PASSWORD);
+        }
+    }
+
 }

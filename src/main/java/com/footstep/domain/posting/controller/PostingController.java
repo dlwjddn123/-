@@ -6,9 +6,13 @@ import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.dto.*;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.footstep.domain.posting.service.PostingService;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Date;
 
@@ -30,9 +34,21 @@ public class PostingController {
     @ApiOperation(
             value = "발자취 생성",
             notes = "발자취(게시물) 생성")
+    @ApiResponses({
+            @ApiResponse(code = 2030, message = "제목을 입력해주세요."),
+            @ApiResponse(code = 2031, message = "내용을 입력해주세요."),
+            @ApiResponse(code = 2032, message = "게시일은 현재 또는 과거이어야 합니다."),
+            @ApiResponse(code = 2033, message = "공개 여부 값은 0 또는 1이어야 합니다."),
+            @ApiResponse(code = 2040, message = "장소명을 입력해주세요."),
+            @ApiResponse(code = 2041, message = "주소를 입력해주세요."),
+            @ApiResponse(code = 2042, message = "위도의 범위는 -90°~90° 입니다."),
+            @ApiResponse(code = 2043, message = "경도의 범위는 -180°~180° 입니다.")
+    })
     @PostMapping(value = "/write")
-    public BaseResponse<BaseResponseStatus> uploadPosting(@RequestHeader("Authorization")String accessToken, @ModelAttribute CreatePostingDto createPostingDto, @RequestPart MultipartFile image) throws IOException {
+    public BaseResponse<BaseResponseStatus> uploadPosting(@RequestHeader("Authorization")String accessToken, @Valid @ModelAttribute CreatePostingDto createPostingDto, @RequestPart MultipartFile image, BindingResult bindingResult) throws IOException {
         try {
+            if(bindingResult.hasErrors())
+                postingService.isValid(bindingResult.getFieldErrors().get(0).getField());
             postingService.uploadPosting(image, createPostingDto);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
         } catch (BaseException exception) {
@@ -58,12 +74,25 @@ public class PostingController {
             value = "발자취 수정",
             notes = "발자취 수정하기"
     )
+    @ApiResponses({
+            @ApiResponse(code = 2030, message = "제목을 입력해주세요."),
+            @ApiResponse(code = 2031, message = "내용을 입력해주세요."),
+            @ApiResponse(code = 2032, message = "게시일은 현재 또는 과거이어야 합니다."),
+            @ApiResponse(code = 2033, message = "공개 여부 값은 0 또는 1이어야 합니다."),
+            @ApiResponse(code = 2040, message = "장소명을 입력해주세요."),
+            @ApiResponse(code = 2041, message = "주소를 입력해주세요."),
+            @ApiResponse(code = 2042, message = "위도의 범위는 -90°~90° 입니다."),
+            @ApiResponse(code = 2043, message = "경도의 범위는 -180°~180° 입니다.")
+    })
     @PostMapping("/{posting-id}/edit")
     public BaseResponse<String> editPosting(@PathVariable("posting-id")Long postingId,
                                                     @RequestHeader("Authorization")String accessToken,
-                                                    @ModelAttribute CreatePostingDto createPostingDto,
-                                                    @RequestPart MultipartFile image) throws IOException {
+                                                    @Valid @ModelAttribute CreatePostingDto createPostingDto,
+                                                    @RequestPart MultipartFile image,
+                                                    BindingResult bindingResult) throws IOException {
         try {
+            if(bindingResult.hasErrors())
+                postingService.isValid(bindingResult.getFieldErrors().get(0).getField());
             postingService.editPosting(postingId, image, createPostingDto);
             return new BaseResponse<>("수정 성공!");
         } catch (BaseException exception) {

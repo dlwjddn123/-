@@ -267,4 +267,17 @@ public class PostingService {
         }
         return new SpecificDateResponseDto(postingListDto.stream().distinct().collect(Collectors.toList()));
     }
+
+    public void isValid(String field) throws BaseException{
+        switch (field) {
+            case "title" -> throw new BaseException(POSTING_EMPTY_TITLE);
+            case "content" -> throw new BaseException(POSTING_EMPTY_CONTENT);
+            case "recordDate" -> throw new BaseException(POSTING_INVALID_RECORD_DATE);
+            case "createPlaceDto.name" -> throw new BaseException(PLACE_EMPTY_NAME);
+            case "createPlaceDto.address" -> throw new BaseException(PLACE_EMPTY_ADDRESS);
+            case "createPlaceDto.latitude" -> throw new BaseException(PLACE_INVALID_LATITUDE);
+            case "createPlaceDto.longitude" -> throw new BaseException(PLACE_INVALID_LONGITUDE);
+            case "visibilityStatusCode" -> throw new BaseException(POSTING_INVALID_STATUS);
+        }
+    }
 }

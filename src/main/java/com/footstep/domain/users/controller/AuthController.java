@@ -8,7 +8,10 @@ import com.footstep.domain.users.service.AuthService;
 import com.footstep.global.config.jwt.JwtTokenUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Api(tags = {"회원 인증 API"})
 @RestController
@@ -22,13 +25,17 @@ public class AuthController {
             value = "로그인",
             notes = "이메일과 비밀번호를 입력하여 로그인")
     @ApiResponses({
+            @ApiResponse(code = 2016, message = "이메일 형식을 확인해주세요."),
+            @ApiResponse(code = 2018, message = "비밀번호를 입력해주세요."),
             @ApiResponse(code = 3014, message = "없는 아이디입니다."),
             @ApiResponse(code = 3015, message = "비밀번호가 다릅니다."),
             @ApiResponse(code = 3016, message = "탈퇴한 회원입니다."),
     })
     @PostMapping("/login")
-    public BaseResponse<TokenDto> login(@RequestBody LoginDto loginDto) {
+    public BaseResponse<TokenDto> login(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult) {
         try {
+            if(bindingResult.hasErrors())
+                authService.isValid(bindingResult.getFieldErrors().get(0).getField());
             return new BaseResponse<>(authService.login(loginDto));
         }catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

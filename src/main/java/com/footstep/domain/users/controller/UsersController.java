@@ -30,16 +30,17 @@ public class UsersController {
 
     @ApiOperation(value = "회원 가입")
     @ApiResponses({
-            @ApiResponse(code = 3013, message = "중복된 이메일입니다."),
-            @ApiResponse(code = 3017, message = "이미 존재하는 닉네임입니다."),
-            @ApiResponse(code = 2016, message = "이메일 형식을 확인해주세요.")
+            @ApiResponse(code = 2016, message = "이메일 형식을 확인해주세요."),
+            @ApiResponse(code = 2018, message = "비밀번호를 입력해주세요."),
+            @ApiResponse(code = 2019, message = "닉네임을 입력해주세요."),
+            @ApiResponse(code = 3011, message = "중복된 이메일입니다."),
+            @ApiResponse(code = 3012, message = "이미 존재하는 닉네임입니다.")
     })
     @PostMapping("/join")
     public BaseResponse<String> join(@Valid @RequestBody JoinDto joinDto, BindingResult bindingResult) {
         try {
-            if(bindingResult.hasErrors()){
-                usersService.emailValid();
-            }
+            if(bindingResult.hasErrors())
+                usersService.isValid(bindingResult.getFieldErrors().get(0).getField());
             usersService.join(joinDto);
             return new BaseResponse<>("회원 가입이 완료되었습니다.");
         } catch (BaseException exception) {
@@ -70,13 +71,18 @@ public class UsersController {
             notes = "현재 비밀번호를 확인하고 변경할 비밀번호를 입력하여 변경")
     @ApiResponses({
             @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
+            @ApiResponse(code = 2020, message = "현재 비밀번호를 입력해주세요."),
+            @ApiResponse(code = 2021, message = "변경할 비밀번호를 입력해주세요."),
+            @ApiResponse(code = 3013, message = "현재 비밀번호와 변경할 비밀번호가 같습니다."),
             @ApiResponse(code = 3015, message = "비밀번호가 다릅니다.")})
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTIyOTAxOSwiZXhwIjoxNjc1NTMxNDE5fQ.aXwUa5FDYUPoNbZQIZ0ktnwImbCxn2SaTnV-S6e7sj4")
     })
     @PatchMapping("/my-page/password")
-    public BaseResponse<String> changePassword(@RequestHeader("Authorization")String accessToken, @RequestBody ChangePasswordInfo changePasswordInfo) {
+    public BaseResponse<String> changePassword(@RequestHeader("Authorization")String accessToken, @Valid @RequestBody ChangePasswordInfo changePasswordInfo, BindingResult bindingResult) {
         try {
+            if(bindingResult.hasErrors())
+                usersService.isValid(bindingResult.getFieldErrors().get(0).getField());
             usersService.changePassword(changePasswordInfo);
             return new BaseResponse<>("비밀번호가 변경되었습니다.");
         } catch (BaseException exception) {
@@ -89,13 +95,16 @@ public class UsersController {
             notes = "이미 존재하는 닉네임인지 확인 후 닉네임 변경")
     @ApiResponses({
             @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
-            @ApiResponse(code = 3013, message = "이미 존재하는 닉네임입니다.")})
+            @ApiResponse(code = 2019, message = "닉네임을 입력해주세요."),
+            @ApiResponse(code = 3012, message = "이미 존재하는 닉네임입니다.")})
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTIyOTAxOSwiZXhwIjoxNjc1NTMxNDE5fQ.aXwUa5FDYUPoNbZQIZ0ktnwImbCxn2SaTnV-S6e7sj4")
     })
     @PatchMapping("/my-page/nickname")
-    public BaseResponse<String> changeNickname(@RequestHeader("Authorization")String accessToken, @RequestBody ChangeNicknameInfo changeNicknameInfo) {
+    public BaseResponse<String> changeNickname(@RequestHeader("Authorization")String accessToken, @Valid @RequestBody ChangeNicknameInfo changeNicknameInfo, BindingResult bindingResult) {
         try {
+            if(bindingResult.hasErrors())
+                usersService.isValid(bindingResult.getFieldErrors().get(0).getField());
             usersService.changeNickname(changeNicknameInfo.getNickname());
             return new BaseResponse<>("닉네임이 변경되었습니다.");
         } catch (BaseException exception) {

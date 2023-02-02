@@ -8,7 +8,10 @@ import com.footstep.domain.posting.service.CommentService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @RestController
@@ -18,25 +21,28 @@ import org.springframework.web.bind.annotation.*;
 @ApiImplicitParams({
         @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTIyOTAxOSwiZXhwIjoxNjc1NTMxNDE5fQ.aXwUa5FDYUPoNbZQIZ0ktnwImbCxn2SaTnV-S6e7sj4")
 })
+@ApiResponses({
+        @ApiResponse(code = 500, message = "Internal Server Error"),
+        @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
+})
 public class CommentController {
 
     private final CommentService commentService;
-
-
-    @ApiResponses({
-            @ApiResponse(code = 500, message = "Internal Server Error"),
-            @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
-    })
 
     @PostMapping("/{posting-id}/comment")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "posting-id", value = "게시물 아이디", required = true, example = "3")
     })
-    @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
+    @ApiResponses({
+            @ApiResponse(code = 2050, message = "댓글 내용을 입력해주세요."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
+    })
     @ApiOperation(value = "댓글 생성", notes = "해당 게시글에 댓글 달기", response = CreateCommentDto.class)
-    public BaseResponse<BaseResponseStatus> addComment(@PathVariable("posting-id")Long postingId, @RequestBody CreateCommentDto createCommentDto,
-                                                       @RequestHeader("Authorization")String accessToken) {
+    public BaseResponse<BaseResponseStatus> addComment(@PathVariable("posting-id")Long postingId, @Valid @RequestBody CreateCommentDto createCommentDto,
+                                                       @RequestHeader("Authorization")String accessToken, BindingResult bindingResult) {
         try {
+            if(bindingResult.hasErrors())
+                commentService.isValid(bindingResult.getFieldErrors().get(0).getField());
             commentService.addComment(createCommentDto.getContent(), postingId);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
         } catch (BaseException exception) {

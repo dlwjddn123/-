@@ -110,4 +110,11 @@ public class AuthService {
     private boolean lessThanReissueExpirationTimesLeft(String refreshToken) {
         return jwtTokenUtil.getRemainMilliSeconds(refreshToken) < JwtExpiration.REISSUE_EXPIRATION_TIME.getValue();
     }
+
+    public void isValid(String field) throws BaseException{
+        switch (field) {
+            case "email" -> throw new BaseException(POST_USERS_INVALID_EMAIL);
+            case "password" -> throw new BaseException(POST_USERS_EMPTY_PASSWORD);
+        }
+    }
 }

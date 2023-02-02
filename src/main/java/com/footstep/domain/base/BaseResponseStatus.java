@@ -32,6 +32,27 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
+    POST_USERS_EMPTY_PASSWORD(false, 2018, "비밀번호를 입력해주세요."),
+    POST_USERS_EMPTY_NICKNAME(false, 2019, "닉네임을 입력해주세요."),
+
+    // [PATCH] /my-page/password
+    PATCH_USERS_EMPTY_CURRENT_PASSWORD(false, 2020, "현재 비밀번호를 입력해주세요."),
+    PATCH_USERS_EMPTY_CHANGED_PASSWORD(false, 2021, "변경할 비밀번호를 입력해주세요."),
+
+    // Posting
+    POSTING_EMPTY_TITLE(false, 2030, "제목을 입력해주세요."),
+    POSTING_EMPTY_CONTENT(false, 2031, "내용을 입력해주세요."),
+    POSTING_INVALID_RECORD_DATE(false, 2032, "게시일은 현재 또는 과거이어야 합니다."),
+    POSTING_INVALID_STATUS(false, 2033, "공개 여부 값은 0 또는 1이어야 합니다."),
+
+    // Place
+    PLACE_EMPTY_NAME(false, 2040, "장소명을 입력해주세요."),
+    PLACE_EMPTY_ADDRESS(false, 2041, "주소를 입력해주세요."),
+    PLACE_INVALID_LATITUDE(false, 2042, "위도의 범위는 -90°~90° 입니다."),
+    PLACE_INVALID_LONGITUDE(false, 2043, "경도의 범위는 -180°~180° 입니다."),
+
+    // Comment
+    COMMENT_EMPTY_CONTENT(false, 2050, "댓글 내용을 입력해주세요."),
 
 
     /**
@@ -41,8 +62,9 @@ public enum BaseResponseStatus {
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
 
     // [POST] /users
-    DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
-    DUPLICATED_NICKNAME(false, 3017, "이미 존재하는 닉네임입니다."),
+    DUPLICATED_EMAIL(false, 3011, "중복된 이메일입니다."),
+    DUPLICATED_NICKNAME(false, 3012, "이미 존재하는 닉네임입니다."),
+    DUPLICATED_PASSWORD(false, 3013, "현재 비밀번호와 변경할 비밀번호가 같습니다."),
     NOT_FOUND_USERS_ID(false,3014,"없는 아이디입니다."),
     INVALID_PASSWORD(false, 3015, "비밀번호가 다릅니다."),
     EXPIRED_USERS(false, 3016, "탈퇴한 회원입니다."),

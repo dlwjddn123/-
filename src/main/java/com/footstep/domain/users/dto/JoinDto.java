@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
@@ -18,8 +19,10 @@ public class JoinDto {
     private String email;
 
     @ApiModelProperty(example = "footstep12")
+    @NotBlank
     private String password;
 
     @ApiModelProperty(example = "하마")
+    @NotBlank
     private String nickname;
 }
