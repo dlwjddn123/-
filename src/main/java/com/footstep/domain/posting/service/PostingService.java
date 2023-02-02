@@ -170,6 +170,32 @@ public class PostingService {
         return new FeedListResponseDto(feedListDto, (long) feedListDto.size());
     }
 
+    public PostingListResponseDto viewSpecificFeedList(Long userId) throws BaseException {
+        Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
+                .orElseThrow(() -> new BaseException(UNAUTHORIZED));
+        Users targetUsers = usersRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(REQUEST_ERROR));
+        List<Posting> feeds = postingRepository.findAllFeed(targetUsers);
+        if (feeds.isEmpty())
+            throw new BaseException(NOT_FOUND_POSTING);
+        List<PostingListDto> postingListDto = new ArrayList<>();
+        List<Date> dates = feeds.stream().map(Posting::getRecordDate).toList();
+
+        for (Posting feed : feeds) {
+            PostingListDto dto = PostingListDto.builder()
+                    .placeName(feed.getPlace().getName())
+                    .recordDate(feed.getRecordDate())
+                    .imageUrl(feed.getImageUrl())
+                    .title(feed.getTitle())
+                    .likes((long) feed.getLikeList().size())
+                    .postingCount((long) Collections.frequency(dates, feed.getRecordDate()))
+                    .postingId(feed.getId())
+                    .build();
+            postingListDto.add(dto);
+        }
+        return new PostingListResponseDto(postingListDto, dates.stream().distinct().count());
+    }
+
     public DesignatedPostingDto viewDesignatedGallery(Date date) throws BaseException {
         Users users = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
@@ -205,15 +231,16 @@ public class PostingService {
         Integer likeCount = likeRepository.countByPosting(posting).orElse(0);
         List<Comment> comment = commentRepository.findByPosting(posting);
         Integer countComment = commentRepository.countByPosting(postingId);
-        Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
+        //Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
         return SpecificPostingDto.builder()
-                .postingDate(postDate)
+                .postingDate(posting.getRecordDate())
                 .postingName(posting.getTitle())
                 .content(posting.getContent())
                 .imageUrl(posting.getImageUrl())
                 .placeName(place.getName())
                 .likeNum(Integer.toString(likeCount))
-                .nickName(currentUsers.getNickname())
+                //.nickName(currentUsers.getNickname())
+                .nickName(posting.getUsers().getNickname())
                 .commentList(comment.stream()
                         .map(c -> CommentDto.builder().commentId(c.getId()).nickname(c.getUsers().getNickname())
                                 .content(c.getContent()).build()).collect(Collectors.toList()))

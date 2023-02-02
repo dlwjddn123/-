@@ -21,7 +21,7 @@ import java.sql.Date;
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NDkxNDc2NiwiZXhwIjoxNjc1MjE3MTY2fQ.KxwX1Q0o-omU1rRIiUJBd9gLPbTRVciP_9g_sklW1Bk")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTIyOTAxOSwiZXhwIjoxNjc1NTMxNDE5fQ.aXwUa5FDYUPoNbZQIZ0ktnwImbCxn2SaTnV-S6e7sj4")
 })
 public class PostingController {
 
@@ -172,6 +172,26 @@ public class PostingController {
     public BaseResponse<FeedListResponseDto> viewFeed(@RequestHeader("Authorization")String accessToken) {
         try {
             FeedListResponseDto result = postingService.viewFeed();
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "특정 유저 피드 리스트 조회",
+            notes = "특정 사용자가 생성한 발자취에 대해 리스트 형태로 조회",
+            response = PostingListResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(code = 2000, message = "입력값을 확인해주세요."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
+    @GetMapping("/feed/{user-id}")
+    public BaseResponse<PostingListResponseDto> viewSpecificFeedList(
+            @ApiParam(value = "사용자 ID", required = true, example = "1") @PathVariable("user-id") Long userId,
+            @RequestHeader("Authorization")String accessToken) {
+        try {
+            PostingListResponseDto result = postingService.viewSpecificFeedList(userId);
             return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
