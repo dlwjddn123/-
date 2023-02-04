@@ -37,6 +37,10 @@ public class CommentService {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new BaseException(NOT_FOUND_COMMENT));
+        if (comment.getUsers().getId() != currentUsers.getId() &&
+                comment.getPosting().getUsers().getId() != currentUsers.getId()) {
+            throw new BaseException(INVALID_USER_JWT);
+        }
         comment.changeStatus();
         commentRepository.save(comment);
     }

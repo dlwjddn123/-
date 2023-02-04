@@ -1,6 +1,7 @@
 package com.footstep.domain.posting.service;
 
 import com.footstep.domain.base.BaseException;
+import com.footstep.domain.base.Status;
 import com.footstep.domain.posting.domain.Comment;
 import com.footstep.domain.posting.domain.place.Place;
 import com.footstep.domain.posting.domain.posting.Posting;
@@ -160,7 +161,7 @@ public class PostingService {
                     .title(feed.getTitle())
                     .content(feed.getContent())
                     .likes((long) feed.getLikeList().size())
-                    .commentCount((long) feed.getComments().size())
+                    .commentCount(feed.getComments().stream().filter(c -> c.getStatus() == Status.NORMAL).count())
                     .placeName(feed.getPlace().getName())
                     .recordDate(feed.getRecordDate())
                     .build();
@@ -230,15 +231,16 @@ public class PostingService {
         Integer likeCount = likeRepository.countByPosting(posting).orElse(0);
         List<Comment> comment = commentRepository.findByPosting(posting);
         Integer countComment = commentRepository.countByPosting(postingId);
-        Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
+        //Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
         return SpecificPostingDto.builder()
-                .postingDate(postDate)
+                .postingDate(posting.getRecordDate())
                 .postingName(posting.getTitle())
                 .content(posting.getContent())
                 .imageUrl(posting.getImageUrl())
                 .placeName(place.getName())
                 .likeNum(Integer.toString(likeCount))
-                .nickName(currentUsers.getNickname())
+                //.nickName(currentUsers.getNickname())
+                .nickName(posting.getUsers().getNickname())
                 .commentList(comment.stream()
                         .map(c -> CommentDto.builder().commentId(c.getId()).nickname(c.getUsers().getNickname())
                                 .content(c.getContent()).build()).collect(Collectors.toList()))
