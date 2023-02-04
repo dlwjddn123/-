@@ -45,7 +45,8 @@ public class PostingController {
             @ApiResponse(code = 2043, message = "경도의 범위는 -180°~180° 입니다.")
     })
     @PostMapping(value = "/write")
-    public BaseResponse<BaseResponseStatus> uploadPosting(@RequestHeader("Authorization")String accessToken, @Valid @ModelAttribute CreatePostingDto createPostingDto, @RequestPart MultipartFile image, BindingResult bindingResult) throws IOException {
+    public BaseResponse<BaseResponseStatus> uploadPosting(@RequestHeader("Authorization")String accessToken, @RequestPart MultipartFile image,
+                                                          @Valid @ModelAttribute CreatePostingDto createPostingDto, BindingResult bindingResult) throws IOException {
         try {
             if(bindingResult.hasErrors())
                 postingService.isValid(bindingResult.getFieldErrors().get(0).getField());
@@ -61,7 +62,9 @@ public class PostingController {
             notes = "발자취 수정 데이터 가져오기"
     )
     @GetMapping("/{posting-id}/edit")
-    public BaseResponse<EditPostingDto> getPosting(@RequestHeader("Authorization")String accessToken, @PathVariable("posting-id")Long postingId) {
+    public BaseResponse<EditPostingDto> getPosting(@RequestHeader("Authorization")String accessToken,
+                                                   @ApiParam(value = "게시물 ID", required = true, example = "3")
+                                                   @PathVariable("posting-id")Long postingId) {
         try {
             EditPostingDto postingInfo = postingService.getPostingInfo(postingId);
             return new BaseResponse<>(postingInfo);
@@ -85,10 +88,11 @@ public class PostingController {
             @ApiResponse(code = 2043, message = "경도의 범위는 -180°~180° 입니다.")
     })
     @PostMapping("/{posting-id}/edit")
-    public BaseResponse<String> editPosting(@PathVariable("posting-id")Long postingId,
+    public BaseResponse<String> editPosting(@ApiParam(value = "게시물 ID", required = true, example = "3")
+                                                    @PathVariable("posting-id")Long postingId,
                                                     @RequestHeader("Authorization")String accessToken,
-                                                    @Valid @ModelAttribute CreatePostingDto createPostingDto,
                                                     @RequestPart MultipartFile image,
+                                                    @Valid @ModelAttribute CreatePostingDto createPostingDto,
                                                     BindingResult bindingResult) throws IOException {
         try {
             if(bindingResult.hasErrors())
@@ -105,7 +109,8 @@ public class PostingController {
             notes = "발자취 삭제하기"
     )
     @PatchMapping("/{posting-id}/remove")
-    public BaseResponse<String> removePosting(@PathVariable("posting-id")Long postingId, @RequestHeader("Authorization")String accessToken) {
+    public BaseResponse<String> removePosting(@ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id")Long postingId,
+                                              @RequestHeader("Authorization")String accessToken) {
         try {
             postingService.removePosting(postingId);
             return new BaseResponse<>("삭제 성공!");
@@ -140,7 +145,9 @@ public class PostingController {
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
     })
     @GetMapping("/gallery/{date}")
-    public BaseResponse<DesignatedPostingDto> viewDesignatedGallery(@RequestHeader("Authorization")String accessToken, @PathVariable Date date) {
+    public BaseResponse<DesignatedPostingDto> viewDesignatedGallery(@RequestHeader("Authorization")String accessToken,
+                                                                    @ApiParam(value = "날짜", required = true, example = "2023-01-23")
+                                                                    @PathVariable Date date) {
         try {
             DesignatedPostingDto result = postingService.viewDesignatedGallery(date);
             return new BaseResponse<>(result);
@@ -179,8 +186,8 @@ public class PostingController {
     })
     @GetMapping("/specific/{start-date}/{end-date}")
     public BaseResponse<SpecificDateResponseDto> specificDatePosting(
-            @ApiParam(value = "조회 시작 날짜", required = true, example = "2022-10-10") @PathVariable("start-date") Date startDate,
-            @ApiParam(value = "조회 끝 날짜", required = true, example = "2022-10-11") @PathVariable("end-date") Date endDate,
+            @ApiParam(value = "조회 시작 날짜", required = true, example = "2023-01-22") @PathVariable("start-date") Date startDate,
+            @ApiParam(value = "조회 끝 날짜", required = true, example = "2023-01-24") @PathVariable("end-date") Date endDate,
             @RequestHeader("Authorization")String accessToken) {
         try {
             SpecificDateResponseDto result = postingService.viewSpecificDatePosting(startDate, endDate);

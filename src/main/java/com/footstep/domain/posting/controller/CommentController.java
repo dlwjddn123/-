@@ -38,8 +38,8 @@ public class CommentController {
             @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
     })
     @ApiOperation(value = "댓글 생성", notes = "해당 게시글에 댓글 달기", response = CreateCommentDto.class)
-    public BaseResponse<BaseResponseStatus> addComment(@PathVariable("posting-id")Long postingId, @Valid @RequestBody CreateCommentDto createCommentDto,
-                                                       @RequestHeader("Authorization")String accessToken, BindingResult bindingResult) {
+    public BaseResponse<BaseResponseStatus> addComment(@PathVariable("posting-id")Long postingId, @RequestHeader("Authorization")String accessToken,
+                                                       @Valid @RequestBody CreateCommentDto createCommentDto, BindingResult bindingResult) {
         try {
             if(bindingResult.hasErrors())
                 commentService.isValid(bindingResult.getFieldErrors().get(0).getField());

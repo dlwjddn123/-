@@ -14,16 +14,16 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class CreatePlaceDto {
 
-    @ApiModelProperty(value = "장소명", example = "경복궁")
+    @ApiModelProperty(value = "장소명", required = true, example = "경복궁")
     @NotBlank
     private String name;
-    @ApiModelProperty(value = "주소", example = "서울 종로구 사직로 161")
+    @ApiModelProperty(value = "주소", required = true, example = "서울 종로구 사직로 161")
     @NotBlank
     private String address;
-    @ApiModelProperty(value = "위도", example = "37.5776087830657")
+    @ApiModelProperty(value = "위도", required = true, example = "37.5776087830657")
     @Min(-90) @Max(90)
     private Double latitude;
-    @ApiModelProperty(value = "경도", example = "126.976896737645")
+    @ApiModelProperty(value = "경도", required = true, example = "126.976896737645")
     @Min(-180) @Max(180)
     private Double longitude;
 }
