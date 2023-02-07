@@ -99,7 +99,7 @@ public class PlaceService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         City city = City.getByName(cityName)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CITY));
-        List<Posting> postings = postingRepository.findByUsers(currentUsers);
+        List<Posting> postings = postingRepository.findByUsersOrderByPlace(currentUsers);
 
         List<AllPlaceDto> allPlaceDto = new ArrayList<>();
         for (Posting posting : postings) {
@@ -139,7 +139,7 @@ public class PlaceService {
     public List<AllPlaceDto> viewAllPlace() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        List<Posting> postings = postingRepository.findByUsers(currentUsers);
+        List<Posting> postings = postingRepository.findByUsersOrderByPlace(currentUsers);
         List<AllPlaceDto> allPlaceDto = new ArrayList<>();
         for (Posting posting : postings) {
             AllPlaceDto dto = AllPlaceDto.builder()
