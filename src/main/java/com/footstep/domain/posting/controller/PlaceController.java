@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/footstep")
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTIyOTAxOSwiZXhwIjoxNjc1NTMxNDE5fQ.aXwUa5FDYUPoNbZQIZ0ktnwImbCxn2SaTnV-S6e7sj4")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY")
 })
 public class PlaceController {
 
