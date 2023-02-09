@@ -251,7 +251,7 @@ public class PostingService {
     public SpecificDateResponseDto viewSpecificDatePosting(Date startDate, Date endDate) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        List<Posting> postings = postingRepository.findByStartDateAndEndDate(startDate, endDate);
+        List<Posting> postings = postingRepository.findByStartDateAndEndDate(currentUsers, startDate, endDate);
         if (postings.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
 

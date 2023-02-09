@@ -21,6 +21,7 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
     @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users ORDER BY p.recordDate DESC")
     List<Posting> findByUsers(@Param("users") Users users);
 
+    @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users")
     List<Posting> findByUsersOrderByPlace(@Param("users") Users users);
 
     @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users != :users AND p.visibilityStatus = 'PUBLIC' " +
@@ -39,6 +40,6 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
 
     Optional<Posting> findById(Long postingId);
 
-    @Query("SELECT p FROM Posting p WHERE p.recordDate between :startDate AND :endDate")
-    List<Posting> findByStartDateAndEndDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT p FROM Posting p WHERE p.users = :users AND p.status = 'NORMAL' AND p.recordDate between :startDate AND :endDate")
+    List<Posting> findByStartDateAndEndDate(@Param("users") Users users, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }
