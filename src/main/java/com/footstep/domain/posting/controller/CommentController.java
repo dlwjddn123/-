@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/footstep")
 @Api(tags = {"댓글 API"})
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTIyOTAxOSwiZXhwIjoxNjc1NTMxNDE5fQ.aXwUa5FDYUPoNbZQIZ0ktnwImbCxn2SaTnV-S6e7sj4")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY")
 })
 @ApiResponses({
         @ApiResponse(code = 500, message = "Internal Server Error"),
@@ -35,7 +35,8 @@ public class CommentController {
     })
     @ApiResponses({
             @ApiResponse(code = 2050, message = "댓글 내용을 입력해주세요."),
-            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다")
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다"),
+            @ApiResponse(code = 2003, message = "권한이 없는 유저의 접근입니다.")
     })
     @ApiOperation(value = "댓글 생성", notes = "해당 게시글에 댓글 달기", response = CreateCommentDto.class)
     public BaseResponse<BaseResponseStatus> addComment(@PathVariable("posting-id")Long postingId, @RequestHeader("Authorization")String accessToken,
