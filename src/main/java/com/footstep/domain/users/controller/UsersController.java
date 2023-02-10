@@ -54,7 +54,7 @@ public class UsersController {
             response = MyPageInfo.class)
     @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY")
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc2MzEyMDU5fQ.VBt8rfM3W7JdH5jMQ7A19-tuZ3OGLBqzmRC8GF2DzGQ")
     })
     @GetMapping("/my-page")
     public BaseResponse<MyPageInfo> getMyPage(@RequestHeader("Authorization")String accessToken) {
@@ -76,7 +76,7 @@ public class UsersController {
             @ApiResponse(code = 3013, message = "현재 비밀번호와 변경할 비밀번호가 같습니다."),
             @ApiResponse(code = 3015, message = "비밀번호가 다릅니다.")})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY")
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc2MzEyMDU5fQ.VBt8rfM3W7JdH5jMQ7A19-tuZ3OGLBqzmRC8GF2DzGQ")
     })
     @PatchMapping("/my-page/password")
     public BaseResponse<String> changePassword(@RequestHeader("Authorization")String accessToken, @Valid @RequestBody ChangePasswordInfo changePasswordInfo, BindingResult bindingResult) {
@@ -98,7 +98,7 @@ public class UsersController {
             @ApiResponse(code = 2019, message = "닉네임을 입력해주세요."),
             @ApiResponse(code = 3012, message = "이미 존재하는 닉네임입니다.")})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY")
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc2MzEyMDU5fQ.VBt8rfM3W7JdH5jMQ7A19-tuZ3OGLBqzmRC8GF2DzGQ")
     })
     @PatchMapping("/my-page/nickname")
     public BaseResponse<String> changeNickname(@RequestHeader("Authorization")String accessToken, @Valid @RequestBody ChangeNicknameInfo changeNicknameInfo, BindingResult bindingResult) {
@@ -115,7 +115,7 @@ public class UsersController {
     @ApiOperation(value = "프로필 이미지 변경")
     @ApiResponse(code = 2005, message = "로그인이 필요합니다.")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY")
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTM4OSwiZXhwIjoxNjc2MzExNzg5fQ.FzTNXWHuzRelBB_3FM5c-p5E5lFNIbpiD-cOVo3XWbQ")
     })
     @PatchMapping("/my-page/profile")
     public BaseResponse<String> changeProfileImage(@RequestHeader("Authorization")String accessToken, @RequestPart MultipartFile profile) throws IOException {
@@ -132,8 +132,8 @@ public class UsersController {
             @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
             @ApiResponse(code = 2006, message = "잘못된 접근입니다.")})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY"),
-            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc4MjQ5OTAxfQ.G_2UW8Ry2E4fhvrRCTX33JfeFPwFNCEuavwHzR9NwfE")
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTM4OSwiZXhwIjoxNjc2MzExNzg5fQ.FzTNXWHuzRelBB_3FM5c-p5E5lFNIbpiD-cOVo3XWbQ"),
+            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc4NjAxNjU5fQ.0rwgpCgbX_MowMP4Tv-kklyZsJHmNORwTHScrMkrEic")
     })
     @PatchMapping("/my-page/secession")
     public BaseResponse<String> secession(@RequestHeader("Authorization") String accessToken,

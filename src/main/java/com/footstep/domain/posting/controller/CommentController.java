@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/footstep")
 @Api(tags = {"댓글 API"})
 @ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY")
+        @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc2MzEyMDU5fQ.VBt8rfM3W7JdH5jMQ7A19-tuZ3OGLBqzmRC8GF2DzGQ")
 })
 @ApiResponses({
         @ApiResponse(code = 500, message = "Internal Server Error"),
