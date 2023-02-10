@@ -50,7 +50,7 @@ public class AuthController {
             @ApiResponse(code = 2004, message = "토큰이 일치하지 않습니다.")
     })
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc4MjQ5OTAxfQ.G_2UW8Ry2E4fhvrRCTX33JfeFPwFNCEuavwHzR9NwfE")
+            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc4NjAxNjU5fQ.0rwgpCgbX_MowMP4Tv-kklyZsJHmNORwTHScrMkrEic")
     })
     @PostMapping("/reissue")
     public BaseResponse<TokenDto> reissue(@RequestHeader("RefreshToken") String refreshToken) {
@@ -71,8 +71,8 @@ public class AuthController {
             @ApiResponse(code = 2006, message = "잘못된 접근입니다.")
     })
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc1OTYwMzAxfQ.xA4WxMEg-8ItwTaaE8zkqBPUrGQKAZoKYNMQMAQVPlY"),
-            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NTY1NzkwMSwiZXhwIjoxNjc4MjQ5OTAxfQ.G_2UW8Ry2E4fhvrRCTX33JfeFPwFNCEuavwHzR9NwfE")
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc2MzEyMDU5fQ.VBt8rfM3W7JdH5jMQ7A19-tuZ3OGLBqzmRC8GF2DzGQ"),
+            @ApiImplicitParam(name = "RefreshToken", value = "refreshToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc4NjAxNjU5fQ.0rwgpCgbX_MowMP4Tv-kklyZsJHmNORwTHScrMkrEic")
     })
     @PostMapping("/logout")
     public BaseResponse<String> logout(@RequestHeader("Authorization") String accessToken,
