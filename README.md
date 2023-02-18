@@ -1,25 +1,48 @@
-#   🏳️‍ ️당신의 발자취 - 서버
+# "당신의 발자취" 안드로이드 앱 서비스
+![foot-step_view1](https://user-images.githubusercontent.com/106023670/219019351-2ab4859e-25bc-46e3-9080-324212d4c060.png)
 
-## 시작
+### ⚙️ Notion Link
+https://mud-century-1f3.notion.site/6b9240d756bd4a56b4dbb6f71f41cb6c
 
-### ☑️ git clone
+</br></br>
+## 당신의 발자취는 "이러한 이유"로 시작되었습니다 !
 
-### ☑️ 개발할 기능에 맞춰 브랜치 이동
+### 👣 정리가 되지 않았던, 나의 갤러리... 🖼
+<img width="901" alt="foot-2" src="https://user-images.githubusercontent.com/106023670/219076388-d0e3a85d-6c5a-4a4c-a99b-58e1febed2d1.png">
 
-- **게시물** 기능 개발이면 `/feature/posting-닉네임` 에서 작업 
-- **회원** 기능 개발이면 `/feature/users-닉네임` 에서 작업
+### 👣 거리두기 해제? 어떻게 놀지?
+<img width="901" alt="foot-2" src="https://user-images.githubusercontent.com/106023670/219076362-5538731b-4648-401d-a579-5504dd8deffe.png">
 
-## 유의 사항
+</br></br>
+## 당신의 발자취는 "이러한 서비스"를 제공합니다.
 
-### ☑️ 버전
-- 스프링 2.7.1
-- 자바 17
+### 👣 발자취 기록하기
+<img width="901" alt="post" src="https://user-images.githubusercontent.com/106023670/219080777-ec493f61-4e76-4506-bb10-a4c043739405.png">
 
-### ☑️ 아직 초기 단계라 main이 자주 바뀔 수  있음
-- 따라서 main에 PR시 반드시 리뷰 후 머지
-- main에 변경사항이 생긴 경우 브랜치에서 작업 하기 전에 pull하고 작업
+### 👣 홈
+<img width="901" alt="home-get" src="https://user-images.githubusercontent.com/106023670/219080826-c277e91c-18d1-4d54-a51e-11aba73a4297.png">
+<img width="901" alt="home-area" src="https://user-images.githubusercontent.com/106023670/219080894-8d67e030-7c9d-424d-a5bb-748fd8c65400.png">
+<img width="901" alt="home-time" src="https://user-images.githubusercontent.com/106023670/219080900-d039a1ee-ac48-4a92-bbcb-b74c80576280.png">
+<img width="901" alt="home-search" src="https://user-images.githubusercontent.com/106023670/219080875-52420859-2b8b-470a-8dc4-a60dda82d482.png">
 
-### ☑️ 같은 코드를 동시에 건드리는 경우가 많음
-- `feature/posting`이나 `feature/users`에 push하기 전에 팀원들에게 알려주세요
-- 메서드 단위로 push
-- 무조건 충돌이 일어날 것 같으니 미리 멘탈 부여잡기
+### 👣 갤러리
+<img width="901" alt="gallery" src="https://user-images.githubusercontent.com/106023670/219081518-7fbd006e-8103-4bd7-b304-f70ac788dfe8.png">
+<img width="901" alt="gallery-feature" src="https://user-images.githubusercontent.com/106023670/219081502-8ce5f45a-d6cf-4441-bb04-df292d93dbcc.png">
+
+
+### 👣 피드
+<img width="901" alt="feed" src="https://user-images.githubusercontent.com/106023670/219081715-c965fa47-0562-43f7-81fd-d8bb10875f3a.png">
+<img width="901" alt="feed-feature" src="https://user-images.githubusercontent.com/106023670/219081724-93ae5512-8451-4a00-825e-0eed62b10d27.png">
+
+
+</br></br>
+## 개발 프레임 워크
+<img width="1006" alt="Foot-step-developer" src="https://user-images.githubusercontent.com/106023670/219092104-e9eeae79-a285-4b18-b914-9561e9ffb2dc.png">
+
+</br></br></br></br></br>
+![foot-step-2](https://user-images.githubusercontent.com/106023670/219019339-1e54bd2c-e7bf-485b-ba34-722756886f5d.png)
+</br>
+<img width="1315" alt="foot-step-ending" src="https://user-images.githubusercontent.com/106023670/219092962-b933da52-5859-4c37-903d-8c4840aeb50c.png">
+
+
+
