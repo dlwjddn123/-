@@ -33,6 +33,6 @@ public class FeedListDto {
     @ApiModelProperty(notes = "장소명", example = "서울역")
     private String placeName;
     @ApiModelProperty(notes = "게시글 게시일", example = "2022-08-10")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date recordDate;
 }
