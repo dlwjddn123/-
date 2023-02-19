@@ -15,7 +15,7 @@ import java.util.List;
 public class SpecificPostingDto {
 
     @ApiModelProperty(notes = "발자취 게시일", example = "2022-08-10")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date postingDate;  //1. 포스트 날짜
     @ApiModelProperty(notes = "발자취 제목", example = "제목예시")
     private String postingName;//2. 발자취 제목

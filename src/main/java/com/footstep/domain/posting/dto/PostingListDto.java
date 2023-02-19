@@ -16,7 +16,7 @@ public class PostingListDto {
     @ApiModelProperty(notes = "장소명", example = "서울역")
     private String placeName;
     @ApiModelProperty(notes = "발자취 게시일", example = "2022-08-10")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date recordDate;
     @ApiModelProperty(notes = "발자취 사진", example = "http://news.samsungdisplay.com/wp-content/uploads/2018/08/1.png")
     private String imageUrl;
