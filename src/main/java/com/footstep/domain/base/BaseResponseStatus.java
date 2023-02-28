@@ -54,6 +54,8 @@ public enum BaseResponseStatus {
     // Comment
     COMMENT_EMPTY_CONTENT(false, 2050, "댓글 내용을 입력해주세요."),
 
+    // Report
+    ALREADY_REPORTED(false, 2060, "이미 신고한 컨텐츠(유저, 게시글 혹은 댓글) 입니다."),
 
     /**
      * 3000 : Response 오류

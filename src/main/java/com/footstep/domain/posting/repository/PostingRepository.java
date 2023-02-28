@@ -24,13 +24,13 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
     @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users")
     List<Posting> findByUsersOrderByPlace(@Param("users") Users users);
 
-    @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users != :users AND p.visibilityStatus = 'PUBLIC' " +
-            "ORDER BY p.recordDate DESC")
-    List<Posting> findAllFeed(@Param("users") Users users);
+    @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.id NOT IN :reported " +
+            "AND p.users != :users AND p.visibilityStatus = 'PUBLIC' ORDER BY p.recordDate DESC")
+    List<Posting> findAllFeed(@Param("reported") List<Long> reported, @Param("users") Users users);
 
-    @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users AND p.visibilityStatus = 'PUBLIC' " +
-            "ORDER BY p.recordDate DESC")
-    List<Posting> findSpecificFeed(@Param("users") Users users);
+    @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users AND :users_id NOT IN :reported " +
+            "AND p.visibilityStatus = 'PUBLIC' ORDER BY p.recordDate DESC")
+    List<Posting> findSpecificFeed(@Param("reported") List<Long> reported, @Param("users_id")Long usersId, @Param("users") Users users);
 
     @Query("SELECT p FROM Posting p WHERE p.status = 'NORMAL' AND p.users = :users AND p.recordDate = :date")
     List<Posting> findByUsersAndRecordDate(@Param("users") Users users, @Param("date") Date date);

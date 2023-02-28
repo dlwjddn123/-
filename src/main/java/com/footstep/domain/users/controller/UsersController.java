@@ -2,6 +2,8 @@ package com.footstep.domain.users.controller;
 
 import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
+import com.footstep.domain.report.dto.CreateReportDto;
+import com.footstep.domain.report.service.ReportService;
 import com.footstep.domain.users.dto.JoinDto;
 import com.footstep.domain.users.dto.changeProfileInfo.ChangeNicknameInfo;
 import com.footstep.domain.users.dto.changeProfileInfo.ChangePasswordInfo;
@@ -11,7 +13,6 @@ import com.footstep.domain.users.service.UsersService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class UsersController {
 
     private final UsersService usersService;
+    private final ReportService reportService;
 
     @ApiOperation(value = "회원 가입")
     @ApiResponses({
@@ -85,6 +87,22 @@ public class UsersController {
                 usersService.isValid(bindingResult.getFieldErrors().get(0).getField());
             usersService.changePassword(changePasswordInfo);
             return new BaseResponse<>("비밀번호가 변경되었습니다.");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
+            value = "유저 신고",
+            notes = "유저 신고하기"
+    )
+    @PostMapping("/{users-id}/users-report")
+    public BaseResponse<String> reportUsers(@ApiParam(value = "유저 ID", required = true, example = "1") @PathVariable("users-id")Long usersId,
+                                              @RequestHeader("Authorization")String accessToken,
+                                              CreateReportDto createReportDto) {
+        try {
+            reportService.createReport(createReportDto, usersId);
+            return new BaseResponse<>("신고 성공!");
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

@@ -4,6 +4,8 @@ import com.footstep.domain.base.BaseException;
 import com.footstep.domain.base.BaseResponse;
 import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.dto.*;
+import com.footstep.domain.report.dto.CreateReportDto;
+import com.footstep.domain.report.service.ReportService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
@@ -30,6 +32,7 @@ import java.sql.Date;
 public class PostingController {
 
     private final PostingService postingService;
+    private final ReportService reportService;
 
     @ApiOperation(
             value = "발자취 생성",
@@ -105,6 +108,22 @@ public class PostingController {
     }
 
     @ApiOperation(
+            value = "발자취 신고",
+            notes = "발자취 신고하기"
+    )
+    @PostMapping("/{posting-id}/posting-report")
+    public BaseResponse<String> reportPosting(@ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id")Long postingId,
+                                              @RequestHeader("Authorization")String accessToken,
+                                              CreateReportDto createReportDto) {
+        try {
+            reportService.createReport(createReportDto, postingId);
+            return new BaseResponse<>("신고 성공!");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(
             value = "발자취 삭제",
             notes = "발자취 삭제하기"
     )
@@ -118,7 +137,6 @@ public class PostingController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
 
     @ApiOperation(
             value = "갤러리 발자취 조회",

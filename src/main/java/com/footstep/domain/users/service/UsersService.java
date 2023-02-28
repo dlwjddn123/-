@@ -115,4 +115,17 @@ public class UsersService {
         }
     }
 
+    public void blocked(Users users) throws BaseException {
+        List<Posting> postings = postingRepository.findByUsers(users);
+        for (Posting posting : postings) {
+            postingService.removePosting(posting.getId());
+        }
+        for (Comment comment : users.getComments()) {
+            commentService.deleteComment(comment.getId());
+        }
+        for (Likes like : users.getLikes()) {
+            likeRepository.delete(like);
+        }
+        usersRepository.save(users);
+    }
 }

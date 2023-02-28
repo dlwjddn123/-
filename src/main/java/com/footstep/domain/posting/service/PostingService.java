@@ -146,7 +146,8 @@ public class PostingService {
     public FeedListResponseDto viewFeed() throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        List<Posting> feeds = postingRepository.findAllFeed(currentUsers);
+        List<Long> reported = currentUsers.getReports().stream().map(report -> report.getTargetId()).collect(Collectors.toList());
+        List<Posting> feeds = postingRepository.findAllFeed(reported, currentUsers);
         if (feeds.isEmpty()){
             throw new BaseException(NOT_FOUND_POSTING);
         }
@@ -175,7 +176,8 @@ public class PostingService {
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         Users targetUsers = usersRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(REQUEST_ERROR));
-        List<Posting> feeds = postingRepository.findSpecificFeed(targetUsers);
+        List<Long> reported = currentUsers.getReports().stream().map(report -> report.getTargetId()).collect(Collectors.toList());
+        List<Posting> feeds = postingRepository.findSpecificFeed(reported, targetUsers.getId(), targetUsers);
         if (feeds.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         List<PostingListDto> postingListDto = new ArrayList<>();
@@ -229,7 +231,8 @@ public class PostingService {
         Place place = placeRepository.findById(posting.getPlace().getId())
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PLACE));
         Integer likeCount = likeRepository.countByPosting(posting).orElse(0);
-        List<Comment> comment = commentRepository.findByPosting(posting);
+        List<Long> reported = currentUsers.getReports().stream().map(report -> report.getTargetId()).collect(Collectors.toList());
+        List<Comment> comment = commentRepository.findByPosting(posting, reported);
         Integer countComment = commentRepository.countByPosting(postingId);
         //Timestamp postDate = Timestamp.valueOf(posting.getCreatedDate());
         return SpecificPostingDto.builder()

@@ -5,6 +5,7 @@ import com.footstep.domain.base.Status;
 import com.footstep.domain.posting.domain.Comment;
 import com.footstep.domain.posting.domain.Likes;
 import com.footstep.domain.posting.domain.posting.Posting;
+import com.footstep.domain.report.domain.Report;
 import com.footstep.domain.users.dto.JoinDto;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class Users extends BaseTimeEntity {
     private String password;
     private String phoneNumber;
     private String profileImageUrl;
+    private int reportedCount;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
@@ -51,12 +53,17 @@ public class Users extends BaseTimeEntity {
     @Builder.Default
     private List<Likes> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Report> reports = new ArrayList<>();
+
     public static Users ofUser(JoinDto joinDto) {
         Users member = Users.builder()
                 .email(joinDto.getEmail())
                 .password(joinDto.getPassword())
                 .nickname(joinDto.getNickname())
                 .status(Status.NORMAL)
+                .reportedCount(0)
                 .build();
         member.addAuthority(Authority.ofUser(member));
         return member;
@@ -86,5 +93,13 @@ public class Users extends BaseTimeEntity {
 
     public void secession() {
         this.status = Status.EXPIRED;
+    }
+
+    public void addReportedCount() {
+        this.reportedCount += 1;
+    }
+
+    public void initReportedCount() {
+        this.reportedCount = 0;
     }
 }
