@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.footstep.domain.base.BaseResponseStatus.*;
 
@@ -36,7 +37,7 @@ public class ReportService {
     public void createReport(CreateReportDto createReportDto, Long targetId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
-        List<Report> reports = currentUsers.getReports();
+        List<Long> reports = currentUsers.getReports().stream().map(Report::getTargetId).toList();
         if (reports.contains(targetId)) {
             throw new BaseException(ALREADY_REPORTED);
         }
@@ -52,6 +53,7 @@ public class ReportService {
                 for (Comment comment : comments) {
                     reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()), comment.getId(), currentUsers));
                 }
+                reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()), reportedUser.getId(), currentUsers));
                 blockContent(reportedUser);
             }
             case 1 -> {

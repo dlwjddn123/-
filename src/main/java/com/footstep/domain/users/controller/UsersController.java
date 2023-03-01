@@ -96,10 +96,17 @@ public class UsersController {
             value = "유저 신고",
             notes = "유저 신고하기"
     )
+    @ApiResponses({
+            @ApiResponse(code = 2005, message = "로그인이 필요합니다."),
+            @ApiResponse(code = 2060, message = "이미 신고한 컨텐츠(유저, 게시글 혹은 댓글) 입니다."),
+            @ApiResponse(code = 3014, message = "없는 아이디입니다.")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "accessToken", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvb3RzdGVwQG5hdmVyLmNvbSIsImlhdCI6MTY3NjAwOTY1OSwiZXhwIjoxNjc2MzEyMDU5fQ.VBt8rfM3W7JdH5jMQ7A19-tuZ3OGLBqzmRC8GF2DzGQ")
+    })
     @PostMapping("/{users-id}/users-report")
     public BaseResponse<String> reportUsers(@ApiParam(value = "유저 ID", required = true, example = "1") @PathVariable("users-id")Long usersId,
                                               @RequestHeader("Authorization")String accessToken,
-                                              CreateReportDto createReportDto) {
+                                            @RequestBody CreateReportDto createReportDto) {
         try {
             reportService.createReport(createReportDto, usersId);
             return new BaseResponse<>("신고 성공!");

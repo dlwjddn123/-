@@ -111,10 +111,14 @@ public class PostingController {
             value = "발자취 신고",
             notes = "발자취 신고하기"
     )
+    @ApiResponses({
+            @ApiResponse(code = 2060, message = "이미 신고한 컨텐츠(유저, 게시글 혹은 댓글) 입니다."),
+            @ApiResponse(code = 3031, message = "게시글이 존재하지 않습니다.")
+    })
     @PostMapping("/{posting-id}/posting-report")
     public BaseResponse<String> reportPosting(@ApiParam(value = "게시물 ID", required = true, example = "3") @PathVariable("posting-id")Long postingId,
                                               @RequestHeader("Authorization")String accessToken,
-                                              CreateReportDto createReportDto) {
+                                              @RequestBody CreateReportDto createReportDto) {
         try {
             reportService.createReport(createReportDto, postingId);
             return new BaseResponse<>("신고 성공!");
