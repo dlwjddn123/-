@@ -25,9 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.NoSuchElementException;
-import java.util.concurrent.BlockingDeque;
+import java.time.LocalDateTime;
 
 import static com.footstep.domain.base.BaseResponseStatus.*;
 import static com.footstep.global.config.jwt.constants.JwtExpiration.REFRESH_TOKEN_EXPIRATION_TIME;
@@ -48,7 +46,7 @@ public class AuthService {
         if (users.getStatus().equals(Status.EXPIRED)) {
             throw new BaseException(BaseResponseStatus.EXPIRED_USERS);
         }
-        if (users.getBannedDate() != null && LocalDate.now().isBefore(users.getBannedDate().toLocalDate()))
+        if (users.getBannedDate() != null && LocalDateTime.now().isBefore(users.getBannedDate()))
             throw new BaseException(BANNED_USERS);
         checkPassword(loginDto.getPassword(), users.getPassword());
         String username = users.getEmail();

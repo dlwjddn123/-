@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.footstep.domain.base.BaseResponseStatus.*;
 
@@ -38,6 +37,7 @@ public class ReportService {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
                 .orElseThrow(() -> new BaseException(UNAUTHORIZED));
         List<Long> reports = currentUsers.getReports().stream().map(Report::getTargetId).toList();
+        List<Long> reportedUsersIds = currentUsers.getReports().stream().map(Report::getReportedUsersId).toList();
         if (reports.contains(targetId)) {
             throw new BaseException(ALREADY_REPORTED);
         }
@@ -47,32 +47,49 @@ public class ReportService {
                         () -> new BaseException(NOT_FOUND_USERS_ID));
                 List<Posting> postings = reportedUser.getPostings();
                 List<Comment> comments = reportedUser.getComments();
+                if (!reportedUsersIds.contains(reportedUser.getId())) {
+                    reportedUser.addReportedCount();
+                }
+                reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()),
+                        reportedUser.getId(), reportedUser.getId(), currentUsers));
                 for (Posting posting : postings) {
-                    reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()), posting.getId(), currentUsers));
+                    if (!reports.contains(posting.getId())) {
+                        reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()),
+                                posting.getId(), reportedUser.getId(), currentUsers));
+                    }
                 }
                 for (Comment comment : comments) {
-                    reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()), comment.getId(), currentUsers));
+                    if (!reports.contains(comment.getId())) {
+                        reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()),
+                                comment.getId(), reportedUser.getId(), currentUsers));
+                    }
                 }
-                reportRepository.save(new Report(ReportTarget.USER, ReportReason.get(createReportDto.getReasonNumber()), reportedUser.getId(), currentUsers));
                 blockContent(reportedUser);
             }
             case 1 -> {
                 Posting posting = postingRepository.findById(targetId).orElseThrow(
                         () -> new BaseException(NOT_FOUND_POSTING));
-                reportRepository.save(new Report(ReportTarget.POSTING, ReportReason.get(createReportDto.getReasonNumber()), posting.getId(), currentUsers));
+                if (!reportedUsersIds.contains(posting.getUsers().getId())) {
+                    posting.getUsers().addReportedCount();
+                }
+                reportRepository.save(new Report(ReportTarget.POSTING, ReportReason.get(createReportDto.getReasonNumber()),
+                        posting.getId(), posting.getUsers().getId(), currentUsers));
                 blockContent(posting.getUsers());
             }
             case 2 -> {
                 Comment comment = commentRepository.findById(targetId).orElseThrow(
                         () -> new BaseException(NOT_FOUND_COMMENT));
-                reportRepository.save(new Report(ReportTarget.COMMENT, ReportReason.get(createReportDto.getReasonNumber()), comment.getId(), currentUsers));
+                if (!reportedUsersIds.contains(comment.getUsers().getId())) {
+                    comment.getUsers().addReportedCount();
+                }
+                reportRepository.save(new Report(ReportTarget.POSTING, ReportReason.get(createReportDto.getReasonNumber()),
+                        comment.getId(), comment.getUsers().getId(), currentUsers));
                 blockContent(comment.getUsers());
             }
         }
     }
 
     public void blockContent(Users reportedUser) throws BaseException {
-        reportedUser.addReportedCount();
         if (reportedUser.getReportedCount() >= 3) {
             reportedUser.initReportedCount();
             usersService.blocked(reportedUser);

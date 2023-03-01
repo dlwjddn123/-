@@ -25,14 +25,17 @@ public class Report extends BaseTimeEntity {
 
     private Long targetId;
 
+    private Long reportedUsersId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private Users users;
 
-    public Report(ReportTarget reportTarget, ReportReason reportReason, Long targetId, Users users) {
+    public Report(ReportTarget reportTarget, ReportReason reportReason, Long targetId, Long reportedUsersId, Users users) {
         this.reportTarget = reportTarget;
         this.reportReason = reportReason;
         this.targetId = targetId;
+        this.reportedUsersId = reportedUsersId;
         this.users = users;
     }
 }
