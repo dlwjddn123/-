@@ -63,7 +63,7 @@ public class ReportService {
             case 2 -> {
                 Comment comment = commentRepository.findById(targetId).orElseThrow(
                         () -> new BaseException(NOT_FOUND_COMMENT));
-                reportRepository.save(new Report(ReportTarget.POSTING, ReportReason.get(createReportDto.getReasonNumber()), comment.getId(), currentUsers));
+                reportRepository.save(new Report(ReportTarget.COMMENT, ReportReason.get(createReportDto.getReasonNumber()), comment.getId(), currentUsers));
                 blockContent(comment.getUsers());
             }
         }
