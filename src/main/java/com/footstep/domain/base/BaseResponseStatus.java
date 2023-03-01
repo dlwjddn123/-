@@ -70,6 +70,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_USERS_ID(false,3014,"없는 아이디입니다."),
     INVALID_PASSWORD(false, 3015, "비밀번호가 다릅니다."),
     EXPIRED_USERS(false, 3016, "탈퇴한 회원입니다."),
+    BANNED_USERS(false, 3017, "정지당한 회원입니다."),
 
     // Place
     NOT_FOUND_PLACE(false, 3021, "없는 장소입니다."),

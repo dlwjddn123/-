@@ -10,6 +10,7 @@ import com.footstep.domain.users.dto.JoinDto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Users extends BaseTimeEntity {
     private String phoneNumber;
     private String profileImageUrl;
     private int reportedCount;
+    private Date bannedDate;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
@@ -102,4 +104,6 @@ public class Users extends BaseTimeEntity {
     public void initReportedCount() {
         this.reportedCount = 0;
     }
+
+    public void changeBannedDate(Date bannedDate) { this.bannedDate = bannedDate; }
 }

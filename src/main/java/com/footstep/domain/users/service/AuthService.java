@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingDeque;
 
@@ -47,6 +48,8 @@ public class AuthService {
         if (users.getStatus().equals(Status.EXPIRED)) {
             throw new BaseException(BaseResponseStatus.EXPIRED_USERS);
         }
+        if (users.getBannedDate() != null && LocalDate.now().isBefore(users.getBannedDate().toLocalDate()))
+            throw new BaseException(BANNED_USERS);
         checkPassword(loginDto.getPassword(), users.getPassword());
         String username = users.getEmail();
         String accessToken = jwtTokenUtil.generateAccessToken(username);
@@ -74,9 +77,11 @@ public class AuthService {
         }
         String accessToken = resolveToken(tokenDto.getAccessToken());
         long remainMilliSeconds = jwtTokenUtil.getRemainMilliSeconds(accessToken);
-        refreshTokenRedisRepository.deleteById(username);
+        removeRefreshTokenByUser(username);
         logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken, username, remainMilliSeconds));
     }
+
+    public void removeRefreshTokenByUser(String username) { refreshTokenRedisRepository.deleteById(username); }
 
     private String resolveToken(String token) {
         return token.substring(7);

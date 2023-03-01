@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -126,6 +128,8 @@ public class UsersService {
         for (Likes like : users.getLikes()) {
             likeRepository.delete(like);
         }
+        authService.removeRefreshTokenByUser(users.getEmail());
+        users.changeBannedDate(Date.valueOf(LocalDate.now().plusDays(30)));
         usersRepository.save(users);
     }
 }
