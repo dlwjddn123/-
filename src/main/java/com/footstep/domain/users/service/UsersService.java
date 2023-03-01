@@ -4,7 +4,6 @@ import com.footstep.domain.base.BaseException;
 import com.footstep.domain.posting.domain.Comment;
 import com.footstep.domain.posting.domain.Likes;
 import com.footstep.domain.posting.domain.posting.Posting;
-import com.footstep.domain.posting.repository.CommentRepository;
 import com.footstep.domain.posting.repository.LikeRepository;
 import com.footstep.domain.posting.repository.PostingRepository;
 import com.footstep.domain.posting.service.CommentService;
@@ -18,12 +17,16 @@ import com.footstep.domain.users.repository.UsersRepository;
 import com.footstep.global.config.s3.S3UploadUtil;
 import com.footstep.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -126,6 +129,8 @@ public class UsersService {
         for (Likes like : users.getLikes()) {
             likeRepository.delete(like);
         }
+        authService.removeRefreshTokenByUser(users.getEmail());
+        users.changeBannedDate(LocalDateTime.now().plusMinutes(5));
         usersRepository.save(users);
     }
 }

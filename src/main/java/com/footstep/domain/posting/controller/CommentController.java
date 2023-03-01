@@ -68,13 +68,15 @@ public class CommentController {
         }
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 2060, message = "이미 신고한 컨텐츠(유저, 게시글 혹은 댓글) 입니다."),
+            @ApiResponse(code = 3041, message = "댓글이 존재하지 않습니다.")})
     @PostMapping("/{comment-id}/comment-report")
     @ApiImplicitParam(name = "comment-id", value = "신고할 댓글 아이디", required = true, example = "4")
-    @ApiResponse(code = 3041, message = "해당 댓글이 존재하지 않습니다")
     @ApiOperation(value = "댓글 신고", notes = "해당 댓글 신고")
     public BaseResponse<BaseResponseStatus> reportComment(@PathVariable("comment-id") Long commentId,
                                                           @RequestHeader("Authorization")String accessToken,
-                                                          CreateReportDto createReportDto) {
+                                                          @RequestBody CreateReportDto createReportDto) {
         try {
             reportService.createReport(createReportDto, commentId);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);

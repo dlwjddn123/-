@@ -177,7 +177,7 @@ public class PostingService {
         Users targetUsers = usersRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(REQUEST_ERROR));
         List<Long> reported = currentUsers.getReports().stream().map(report -> report.getTargetId()).collect(Collectors.toList());
-        List<Posting> feeds = postingRepository.findSpecificFeed(reported, targetUsers.getId(), targetUsers);
+        List<Posting> feeds = postingRepository.findSpecificFeed(reported, targetUsers);
         if (feeds.isEmpty())
             throw new BaseException(NOT_FOUND_POSTING);
         List<PostingListDto> postingListDto = new ArrayList<>();
