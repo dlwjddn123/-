@@ -1,6 +1,7 @@
 package com.footstep.domain.report.service;
 
 import com.footstep.domain.base.BaseException;
+import com.footstep.domain.mail.service.MailService;
 import com.footstep.domain.posting.domain.Comment;
 import com.footstep.domain.posting.domain.posting.Posting;
 import com.footstep.domain.posting.repository.CommentRepository;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static com.footstep.domain.base.BaseResponseStatus.*;
@@ -32,6 +35,7 @@ public class ReportService {
     private final PostingRepository postingRepository;
     private final CommentRepository commentRepository;
     private final UsersService usersService;
+    private final MailService mailService;
 
     public void createReport(CreateReportDto createReportDto, Long targetId) throws BaseException {
         Users currentUsers = usersRepository.findByEmail(SecurityUtils.getLoggedUserEmail())
@@ -92,6 +96,13 @@ public class ReportService {
     public void blockContent(Users reportedUser) throws BaseException {
         if (reportedUser.getReportedCount() >= 3) {
             reportedUser.initReportedCount();
+            try{
+                mailService.sendMail(reportedUser.getEmail());
+            } catch (UnsupportedEncodingException exception) {
+                throw new BaseException(INVALID_CHAR_SET);
+            } catch (MessagingException exception) {
+                throw new BaseException(INVALID_CHAR_SET);
+            }
             usersService.blocked(reportedUser);
         }
         usersRepository.save(reportedUser);

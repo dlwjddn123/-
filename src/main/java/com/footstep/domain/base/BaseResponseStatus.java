@@ -57,6 +57,11 @@ public enum BaseResponseStatus {
     // Report
     ALREADY_REPORTED(false, 2060, "이미 신고한 컨텐츠(유저, 게시글 혹은 댓글) 입니다."),
 
+    // mail
+    INVALID_EMAIL(false, 2070, "존재하지 않는 이메일입니다."),
+    INVALID_CHAR_SET(false, 2080, "character set 형식이 잘못되었습니다."),
+    FAIL_SEND(false, 2090, "이메일 전송에 실패했습니다."),
+
     /**
      * 3000 : Response 오류
      */
