@@ -28,6 +28,7 @@ out/
 
 .yml
 application.yml
+email.properties
 
 ### NetBeans ###
 /nbproject/private/
