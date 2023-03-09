@@ -54,6 +54,13 @@ public enum BaseResponseStatus {
     // Comment
     COMMENT_EMPTY_CONTENT(false, 2050, "댓글 내용을 입력해주세요."),
 
+    // Report
+    ALREADY_REPORTED(false, 2060, "이미 신고한 컨텐츠(유저, 게시글 혹은 댓글) 입니다."),
+
+    // mail
+    INVALID_EMAIL(false, 2070, "존재하지 않는 이메일입니다."),
+    INVALID_CHAR_SET(false, 2080, "character set 형식이 잘못되었습니다."),
+    FAIL_SEND(false, 2090, "이메일 전송에 실패했습니다."),
 
     /**
      * 3000 : Response 오류
@@ -68,6 +75,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_USERS_ID(false,3014,"없는 아이디입니다."),
     INVALID_PASSWORD(false, 3015, "비밀번호가 다릅니다."),
     EXPIRED_USERS(false, 3016, "탈퇴한 회원입니다."),
+    BANNED_USERS(false, 3017, "정지당한 회원입니다."),
 
     // Place
     NOT_FOUND_PLACE(false, 3021, "없는 장소입니다."),

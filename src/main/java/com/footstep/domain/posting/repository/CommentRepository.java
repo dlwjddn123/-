@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query("SELECT c FROM Comment c WHERE c.status = 'NORMAL' AND c.posting = :posting")
-    List<Comment> findByPosting(@Param("posting") Posting posting);
+    @Query("SELECT c FROM Comment c WHERE c.status = 'NORMAL' AND c.posting = :posting AND c.id not in :reported")
+    List<Comment> findByPosting(@Param("posting") Posting posting, @Param("reported") List<Long> reportedId);
 
     @Query("SELECT COUNT(p) FROM Posting p INNER JOIN Comment c ON p = c.posting WHERE c.status = 'NORMAL' AND p.id = :postingId")
     Integer countByPosting(@Param("postingId")Long postingId);

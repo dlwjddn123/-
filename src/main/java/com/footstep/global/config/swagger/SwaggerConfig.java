@@ -1,4 +1,4 @@
-package com.footstep.global.config.swaager;
+package com.footstep.global.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

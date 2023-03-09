@@ -6,7 +6,6 @@ import com.footstep.domain.posting.domain.Comment;
 import com.footstep.domain.posting.domain.Likes;
 import com.footstep.domain.posting.domain.place.Place;
 import com.footstep.domain.posting.dto.CreatePostingDto;
-import com.footstep.domain.posting.dto.EditPostingDto;
 import com.footstep.domain.users.domain.Users;
 import lombok.AccessLevel;
 import lombok.Builder;

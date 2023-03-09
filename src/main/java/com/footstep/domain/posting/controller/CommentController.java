@@ -5,6 +5,8 @@ import com.footstep.domain.base.BaseResponse;
 import com.footstep.domain.base.BaseResponseStatus;
 import com.footstep.domain.posting.dto.CreateCommentDto;
 import com.footstep.domain.posting.service.CommentService;
+import com.footstep.domain.report.dto.CreateReportDto;
+import com.footstep.domain.report.service.ReportService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +30,7 @@ import javax.validation.Valid;
 public class CommentController {
 
     private final CommentService commentService;
+    private final ReportService reportService;
 
     @PostMapping("/{posting-id}/comment")
     @ApiImplicitParams({
@@ -62,7 +65,24 @@ public class CommentController {
 
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
+    @ApiResponses({
+            @ApiResponse(code = 2060, message = "이미 신고한 컨텐츠(유저, 게시글 혹은 댓글) 입니다."),
+            @ApiResponse(code = 3041, message = "댓글이 존재하지 않습니다.")})
+    @PostMapping("/{comment-id}/comment-report")
+    @ApiImplicitParam(name = "comment-id", value = "신고할 댓글 아이디", required = true, example = "4")
+    @ApiOperation(value = "댓글 신고", notes = "해당 댓글 신고")
+    public BaseResponse<BaseResponseStatus> reportComment(@PathVariable("comment-id") Long commentId,
+                                                          @RequestHeader("Authorization")String accessToken,
+                                                          @RequestBody CreateReportDto createReportDto) {
+        try {
+            reportService.createReport(createReportDto, commentId);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
